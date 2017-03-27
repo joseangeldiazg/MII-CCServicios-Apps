@@ -1,0 +1,11 @@
+p Esta aplicación web le permite llevar un registro completo de usuarios. Solo tendrá que añadirlos en esta vista y tras ello podrá editarlos o eliminarlos.
+
+h1 Nuevo Usuario
+
+form(method="POST", action="/user")
+
+  p Nombre:
+    input(type="text" name="name")
+
+  p
+    button(type="submit") Enviar
