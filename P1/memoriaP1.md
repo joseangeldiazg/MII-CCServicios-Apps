@@ -12,7 +12,7 @@ En esta primera práctica es necesario tener dos máquinas virtuales, una con un
 	
 		onevnet list
 	
-	Obtenemos la lista de imagenes disponibles, nos interesa la ubuntu y guardamos el <ID> para referenciarlo después. 
+	Obtenemos la lista de imágenes disponibles, nos interesa la ubuntu y guardamos el <ID> para referenciarlo después. 
 	
 		oneimage list
 	
@@ -37,7 +37,7 @@ Para ello nos conectamos a cada una de las máquinas virtuales por SSH. Para ver
 
 ### Servidor web:
 
-Nuestra aplicación estará basada en NodeJS, Express, Jade (para dar rapidamente forma a los formularios) y por último MongoDB aunque esto lo veremos en el punto del servidor de BD. También necesitaremos instalar Git, ya  que la aplicación será desarrollada en local y llevada a producción a OpenNebula desde este sistema de control de versiones. 
+Nuestra aplicación estará basada en NodeJS, Express, Jade (para dar rápidamente forma a los formularios) y por último MongoDB aunque esto lo veremos en el punto del servidor de BD. También necesitaremos instalar Git, ya  que la aplicación será desarrollada en local y llevada a producción a OpenNebula desde este sistema de control de versiones. 
 
 Para instalar Node y Express hemos seguido [este tutorial](https://www.vultr.com/docs/installing-node-js-and-express). También es necesario instalar un servidor web, para ello, hemos utilizado Nginx y concretamente [este tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-14-04) donde nos indica como conseguir que el Middleware, Express, sirva las aplicaciones a través del servidor web y no con uno propio. Esto tiene grandes ventajas ya que con muy poco más de código podremos hacer que este microframework en conjunción con Nginx se comporte de balanceador de carga dando más robusted a nuestra app. 
 
@@ -111,10 +111,10 @@ Tras lo cual si todo ha ido correctamente la aplicación comenzará a ejecutarse
 
 ## Aplicación web
 
-La aplicación web más que una aplicacion es un módulo o componente que podria incluirse dentro de otra aplicación mayor fácilmente. Implementa un sistema de control de usuarios CRUD.
+La aplicación web más que una aplicación es un módulo o componente que podría incluirse dentro de otra aplicación mayor fácilmente. Implementa un sistema de control de usuarios CRUD.
 
 
-La aplicación está desarrollada con Node, y utiliza el modelo vista controlador mediante plantillas y un diseño modular que permite que esta sea fácilmente extensible. Por ejemplo si quisieramos llevarnos el módulo CRUD desarrollado a otra aplicación, solo tendríamos que llevarnos la carpeta ``users`` ubicada dentro de ``controllers`` a nuestra nueva app, cargar el módulo en el archivo ``app.js`` correspondiente y si el modelo de la base de datos y conexión están creadas funcionaría perfectamente. 
+La aplicación está desarrollada con Node, y utiliza el modelo vista controlador mediante plantillas y un diseño modular que permite que esta sea fácilmente extensible. Por ejemplo si quisiéramos llevarnos el módulo CRUD desarrollado a otra aplicación, solo tendríamos que llevarnos la carpeta ``users`` ubicada dentro de ``controllers`` a nuestra nueva app, cargar el módulo en el archivo ``app.js`` correspondiente y si el modelo de la base de datos y conexión están creadas funcionaría perfectamente. 
 
 Respecto a la base de datos creada solo tenemos una colección denominada usuarios y con un solo campo (nombre).
 
@@ -130,7 +130,7 @@ Respecto a la base de datos creada solo tenemos una colección denominada usuari
 ![Listar usuarios](images/3.png "Listar usuarios")
 
 
-* Si pulsamos sibre editar podremos editar el usuario sobre el que hemos pulsado.
+* Si pulsamos sobre editar podremos editar el usuario sobre el que hemos pulsado.
 
 ![Editar usuarios](images/4.png "Editar usuarios")
 
