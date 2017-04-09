@@ -42,7 +42,7 @@ Como la aplicación realizada en la práctica anterior está basada en Node y Ex
 	docker pull node
 	
 	
-Dado que también necesitaremos un servidor web, y los contenedores deben tener tendencia a ser lo más ligeros posibles crearemos otro contenedor con Nginx como servidor web al que llegarán las peticiones, esto hace que con lago más de código este contenedor haga las veces de balanceador de carga y ofrezca más robusted al sistema, aunque nosotros no lo implementaremos, si que lo dejaremos conectado para posibles futuras inclusiones. Lo primero que hacemos es obtener el contenedor. 
+Dado que también necesitaremos un servidor web, y los contenedores deben tener tendencia a ser lo más ligeros posibles crearemos otro contenedor con Nginx como servidor web al que llegarán las peticiones, esto hace que con lago más de código este contenedor haga las veces de balanceador de carga y ofrezca más robustez al sistema, aunque nosotros no lo implementaremos, si que lo dejaremos conectado para posibles futuras inclusiones. Lo primero que hacemos es obtener el contenedor. 
 
 	docker pull webdevops/nginx 
 	
@@ -149,7 +149,7 @@ En la práctica se propone duplicar los contenedores de servidor de apps y el de
 # Servidor ownCloud en Docker
 
 
-Para favorecer la robusted del servidor ownCloud, en lugar de montar la base de datos para persistencia en el mismo contenedor donde alojaremos ownCloud, montaremos un servidor de BD PostgreSQL por lo que nuestra arquitectura será la que podemos ver en la siguiente imagen:
+Para favorecer la robustez del servidor ownCloud, en lugar de montar la base de datos para persistencia en el mismo contenedor donde alojaremos ownCloud, montaremos un servidor de BD PostgreSQL por lo que nuestra arquitectura será la que podemos ver en la siguiente imagen:
 
 ![Arquitectura ownCloud](images/1.png "Arquitectura ownCloud")
 
