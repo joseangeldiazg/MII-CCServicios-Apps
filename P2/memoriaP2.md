@@ -65,6 +65,7 @@ Por último debemos enlazar el servidor web a nuestro servidor de apps, y dejar 
 
 	docker run -d --name webserverjose -p=14027:80 --link appserverjose:appserverjose webdevops/nginx  
 	
+**Respecto a la pregunta planteada al inicio de la práctica, el servicio ssl escucha en el puerto 443.**
 	
 Una vez hecho esto debemos acceder a nuestros contenedores, e instalar antes de nada herramientas básicas como git o un editor, como por ejemplo vim. Una vez realizada la configuración que veremos en los puntos siguientes tendremos una estructura parecida a la que podemos ver en la siguiente imagen. 
 
@@ -133,6 +134,10 @@ Interfaz para listar los usuarios añadidos a la base de datos. Si editamos o el
 Interfaz para añadir un nuevo usuario. 
 
 ![Añadir usuarios](images/usernew.png "Añadir usuarios")
+
+# Robusted de los servicios
+
+En la práctica se propone duplicar los contenedores de servidor de apps y el de base de datos y discutir o mostrar qué pasaría si uno de ellos cayese. Aunque no se han duplicado, el tener replicada la información y los servicios entre contenedores, además de haber dado un servidor web que se encarga de servir las aplicaciones en un contenedor aparte, harían que el servicio fuera muy robusto y tolerante a caidas de manera que si uno de los servidores de apps cayera se podria servir directamente desde el otro sin que el usuario final notara la caida. 
 
 
 # Servidor ownCloud en Docker
