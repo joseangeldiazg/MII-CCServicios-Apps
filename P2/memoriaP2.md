@@ -4,16 +4,23 @@
 
 En esta práctica se estudiaran los PaaS. Se desarrollaran actividades relacionadas con contenedores y la gestión de los mismos con los siguientes objetivos. 
 
-1. Crear un contenedor docker (A) con APACHE, SSL, y PHP5.	
-	a. ¿Cuál es el puerto SSL?
-	
-	b. ¿Cómo redirigir el puerto SSL a vuestro puerto asignado?
-	2. Crear un contenedor docker (B) con MySQL
-3. Crear una página en el servidor Web (A) que se conecte al servicio MySQL en el contenedor (B)
-4. Duplicar los contenedores A y B y discutir o mostrar qué pasaría si uno de ellos cayese.
-5. Desplegar un servicio OwnCloud o NewCloud en otro contenedor (o eliminar alguno de los ya utilizados) y chequear su correcto funcionamiento almacenando archivos.
 
-6. Elaborar un breve documento detallando el todo trabajo realizado.
+1. Crear un contenedor docker (A) con APACHE, SSL, y PHP5.
+	
+	a. ¿Cuál es el puerto SSL?
+	
+	b. ¿Cómo redirigir el puerto SSL a vuestro puerto asignado?
+	
+2. Crear un contenedor docker (B) con MySQL
+
+3. Crear una página en el servidor Web (A) que se conecte al servicio MySQL en el contenedor (B)
+
+4. Duplicar los contenedores A y B y discutir o mostrar qué pasaría si uno de ellos cayese.
+
+5. Desplegar un servicio OwnCloud o NewCloud en otro contenedor (o eliminar alguno de los ya utilizados) y chequear su correcto funcionamiento almacenando archivos.
+
+
+6. Elaborar un breve documento detallando el todo trabajo realizado.
 
 ## Conexión
 
@@ -134,9 +141,9 @@ Interfaz para añadir un nuevo usuario.
 
 ![Añadir usuarios](images/usernew.png "Añadir usuarios")
 
-# Robusted de los servicios
+# Robustez de los servicios
 
-En la práctica se propone duplicar los contenedores de servidor de apps y el de base de datos y discutir o mostrar qué pasaría si uno de ellos cayese. Aunque no se han duplicado, el tener replicada la información y los servicios entre contenedores, además de haber dado un servidor web que se encarga de servir las aplicaciones en un contenedor a parte, harían que el servicio fuera muy robusto y tolerante a caidas de manera que si uno de los servidores de apps cayera se podria servir directamente desde el otro sin que el usuario final notara la caída. 
+En la práctica se propone duplicar los contenedores de servidor de apps y el de base de datos y discutir o mostrar qué pasaría si uno de ellos cayese. Aunque no se han duplicado, el tener replicada la información y los servicios entre contenedores, además de haber dado un servidor web que se encarga de servir las aplicaciones en un contenedor a parte, harían que el servicio fuera muy robusto y tolerante a caídas de manera que si uno de los servidores de apps cayera se podría servir directamente desde el otro sin que el usuario final notara la caída. 
 
 
 # Servidor ownCloud en Docker
