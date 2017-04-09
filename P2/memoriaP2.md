@@ -30,13 +30,12 @@ Para comprobar que docker funciona correctamente podemos usar:
 
 ## Contenedores para alojar las apps
 
-Como la aplicación realizada en la práctica anterior está basada en Node y Express, hemos bajado la siguiente imagen de [Docker Hub](https://hub.docker.com/_/node/), que contiene todo lo necesario para ejecutar nuestra app, a excepcion de Express que deberemos instalar. Para ello el primer paso es obtener la imagen:
+Como la aplicación realizada en la práctica anterior está basada en Node y Express, hemos bajado la siguiente imagen de [Docker Hub](https://hub.docker.com/_/node/), que contiene todo lo necesario para ejecutar nuestra app, a excepción de Express que deberemos instalar. Para ello el primer paso es obtener la imagen:
 	
 	docker pull node
 	
-		
 	
-Dado que también necesitaremos un servidor web, y los contenedores deben tener tendencia a ser lo más ligeros posibles crearemos otro contenedor con Nginx como servidor web al que llegaran las peticiones, esto hace que con lago más de código este contenedor haga las veces de balanceador de carga y ofrezca más robusted al sistema, aunque nosotros no lo implementaremos, si que lo dejaremos conectado para posibles futuras inclusiones. Lo primero que hacemos es obtener el contenedor. 
+Dado que también necesitaremos un servidor web, y los contenedores deben tener tendencia a ser lo más ligeros posibles crearemos otro contenedor con Nginx como servidor web al que llegarán las peticiones, esto hace que con lago más de código este contenedor haga las veces de balanceador de carga y ofrezca más robusted al sistema, aunque nosotros no lo implementaremos, si que lo dejaremos conectado para posibles futuras inclusiones. Lo primero que hacemos es obtener el contenedor. 
 
 	docker pull webdevops/nginx 
 	
@@ -51,11 +50,11 @@ La base de datos que hemos utilizado en la anterior práctica es MongoDB. En Doc
 # Configuración 
 
 
-El primer paso será crear y ejecutar el servidor mongo, como en su propia pagina en DockerHub indican, esta imagen ya lleva el puerto 27017 abierto por lo que no tendremos nada más que hacer lo siguiente:
+El primer paso será crear y ejecutar el servidor mongo, como en su propia página en DockerHub indican, esta imagen ya lleva el puerto 27017 abierto por lo que no tendremos nada más que hacer lo siguiente:
 
 	docker run -d --name databasejose mongo mvertes/alpine-mongo
 	
-Ahora tendremos que crear un contenedor con node y hacer un link a la base de datos mongo creada, para que se conecten correctamente. Tambien deberemos hacer que el puerto 3000 donde correrá la app sea visible para ello podemos usar el comando:
+Ahora tendremos que crear un contenedor con node y hacer un link a la base de datos mongo creada, para que se conecten correctamente. También deberemos hacer que el puerto 3000 donde correrá la app sea visible para ello podemos usar el comando:
 
 
 	 docker run -d --name appserverjose --expose 3000 --link=databasejose:mongodb -it node
@@ -137,7 +136,7 @@ Interfaz para añadir un nuevo usuario.
 
 # Robusted de los servicios
 
-En la práctica se propone duplicar los contenedores de servidor de apps y el de base de datos y discutir o mostrar qué pasaría si uno de ellos cayese. Aunque no se han duplicado, el tener replicada la información y los servicios entre contenedores, además de haber dado un servidor web que se encarga de servir las aplicaciones en un contenedor aparte, harían que el servicio fuera muy robusto y tolerante a caidas de manera que si uno de los servidores de apps cayera se podria servir directamente desde el otro sin que el usuario final notara la caida. 
+En la práctica se propone duplicar los contenedores de servidor de apps y el de base de datos y discutir o mostrar qué pasaría si uno de ellos cayese. Aunque no se han duplicado, el tener replicada la información y los servicios entre contenedores, además de haber dado un servidor web que se encarga de servir las aplicaciones en un contenedor a parte, harían que el servicio fuera muy robusto y tolerante a caidas de manera que si uno de los servidores de apps cayera se podria servir directamente desde el otro sin que el usuario final notara la caída. 
 
 
 # Servidor ownCloud en Docker
