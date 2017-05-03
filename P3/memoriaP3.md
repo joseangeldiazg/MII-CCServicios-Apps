@@ -2,20 +2,53 @@
 
 ## Enunciado y objetivos
 
-El objetivo de esta práctica es familiarizarse con el uso de un sistema de gestión de bases de datos en entornos Big Data. Para ello, haremos uso de la aplicación más conocida como es MongoDB.
+El objetivo de esta práctica es familiarizarse con el uso de un sistema de gestión de bases de datos en entornos Big Data. Para ello, haremos uso de la base de datos noSQL más conocida como es, MongoDB.
 
+
+## Creación del contenedor Docker con MongoDB
+
+Nos decantamos por la imagen de ``mvertes/alpine-mongo`` ya que es mucho más ligera que otras como la oficial de MongoDB.
+
+	docker run -d --name mongo-p4-jose -p 14029:27017 -v /tmp/mongo/insertar_pedidos.js:/home/insertar_pedidos.js mvertes/alpine-mongo
+
+Una vez creado el contenedor conectamos a el siguiente comando:
+
+	docker exec -ti mongo sh
+	
+Una vez dentro debemos iniciar la consola de MongoDb para ello, simplemente introducimos en la terminal ``mongo``. Por último para cargar la colección de prueba que usaremos introducimos el siguiente comando:
+
+	load('/home/insertar_pedidos.js');
+	
 
 ## Objetivo 1
 
 Crear la colección pedidos en cada BD asociada a vuestro usuario, sobre la que se realizarán diversas operaciones CRUD. Para crear la colección abre y ejecuta el script ``insertar_pedidos.js`` (accesible en ``/tmp/mongo``). Las tareas a realizar son las siguientes:
-1. Visualiza la colección pedidos y familiarízate con ella. Observa los distintos tipos de datos y sus estructuras dispares.
 
+### 1- Visualiza la colección pedidos y familiarízate con ella. Observa los distintos tipos de datos y sus estructuras dispares.
 
+		db.pedidos.find().pretty();
+		
+Esto nos ofrecerá la siguiente salida, donde podemos apreciar la coleccion pedidos, compuesta de **documentos** clientes, que a su vez pueden contener pedidos, que vuelve a ser un **documento**  y a su vez se compone de Productos. 
+	
+![Coleccion pedidos](./img/sal1.png "Coleccion pedidos")
 
+### 2-  Visualiza sólo el primer documento de la colección. Utiliza los métodos ``.limit()`` y ``.findOne()``.
 
-2. Visualiza sólo el primer documento de la colección. Utiliza los métodos ``.limit()`` y ``.findOne()``.
-3. Visualiza el cliente con id_cliente = 2222
-4. Visualiza los clientes que hayan pedido algún producto de más de 94 euros.
+	db.pedidos.findOne();
+	
+	db.pedidos.find().limit(1).pretty();
+
+``Limit`` funciona de manera similar a SQL y findOne() podemos compararlo con ``SELECT TOP 1 FROM...``		
+### 3- Visualiza el cliente con id_cliente = 2222
+
+	db.pedidos.find({id_cliente: 2222}).pretty();
+	
+Para simular la clausula WHERE de SQL, introduciremos las restricciones dentro de llaves en la instrucción ``find``. 	
+### 4- Visualiza los clientes que hayan pedido algún producto de más de 94 euros.
+
+	db.pedidos.find({"Pedidos.Productos.Precio_unidad":{$gt:94}}).pretty();
+		
+Como vemos es más sencillo que SQL, ya que en ese caso tendríamos que haber realizado reuniones por claves entre tablas para haber obtenido todo. 
 5. Visualiza los clientes de Jaén o Salamanca (excluye los datos de los pedidos). Utiliza los operador ``$or e $in``
 6. Visualiza los clientes no tienen campo pedidos.
 7. Visualiza los clientes que hayan nacido en 1963.
@@ -49,4 +82,4 @@ Vamos a utilizar la base de datos libre GeoWorldMap de GeoBytes. Es una base de 
 2. ¿Cómo podríamos obtener la ciudades más distantes en cada país?
 3. ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
 4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?.5. ¿Cómo podríamos la distancia media entre las ciudades de cada país?.
-6. ¿Mejoraría el rendimiento si creamos un índice?¿Sobre que campo?Comprobadlo.
+6. ¿Mejoraría el rendimiento si creamos un índice? ¿Sobre que campo?Comprobadlo.
