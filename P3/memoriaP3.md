@@ -49,25 +49,27 @@ Para simular la clausula WHERE de SQL, introduciremos las restricciones dentro d
 	db.pedidos.find({"Pedidos.Productos.Precio_unidad":{$gt:94}}).pretty();
 		
 Como vemos es más sencillo que SQL, ya que en ese caso tendríamos que haber realizado reuniones por claves entre tablas para haber obtenido todo. 
-5. Visualiza los clientes de Jaén o Salamanca (excluye los datos de los pedidos). Utiliza los operador ``$or e $in``
-6. Visualiza los clientes no tienen campo pedidos.
-7. Visualiza los clientes que hayan nacido en 1963.
-8. Visualiza los clientes que hayan pedido algún producto fabricado por Canon y algún producto cuyo precio sea inferior a 15 euros
-9. Datos personales (id_cliente, Nombre, Direccion, Localidad y Fnacimiento) de los clientes cuyo nombre empieza por la cadena "c" (No distinguir entre mayusculas y minúsculas).
-10. Visualiza los datos personales de los clientes (excluyendo _id). Limita los documentos a 4.
+### 5. Visualiza los clientes de Jaén o Salamanca (excluye los datos de los pedidos). Utiliza los operador ``$or e $in``
 
-11. Ídem anterior pero ordenando los documentos por Localidad (ascendente) e id_cliente (descendente).
+	db.pedidos.find({"Pedidos.Localidad":{$in:"Jaen" $or:"Salamanca"}})
+### 6. Visualiza los clientes no tienen campo pedidos.
+### 7. Visualiza los clientes que hayan nacido en 1963.
+### 8. Visualiza los clientes que hayan pedido algún producto fabricado por Canon y algún producto cuyo precio sea inferior a 15 euros
+### 9. Datos personales (id_cliente, Nombre, Direccion, Localidad y Fnacimiento) de los clientes cuyo nombre empieza por la cadena "c" (No distinguir entre mayusculas y minúsculas).
+### 10. Visualiza los datos personales de los clientes (excluyendo _id). Limita los documentos a 4.
+
+### 11. Ídem anterior pero ordenando los documentos por Localidad (ascendente) e id_cliente (descendente).
 
 ## Objetivo 2
 
 A partir de la colección pedidos utilizaremos consultas más complejas por medio de los operadores de agregación (pipeline). Por facilidad se indica la consulta en formato SQL estándar. Las tareas a realizar en este caso obtener:
-1. No total de clientes:	
+### 1. No total de clientes:	
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos;
-	2. No total de clientes de Jaén:
+	### 2. No total de clientes de Jaén:
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos WHERE Localidad = "Jaen";
-		3. Facturación total clientes por localidad		SELECT Localidad, SUM (Facturacion) "TOTAL" FROM pedidos GROUP BY Localidad;4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
+		### 3. Facturación total clientes por localidad		SELECT Localidad, SUM (Facturacion) "TOTAL" FROM pedidos GROUP BY Localidad;### 4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
 		SELECT Localidad, AVG (Facturacion) "FACTURACION MEDIA" FROM pedido WHERE Localidad <> "Jaen" GROUP BY Localidad HAVING AVG (Facturacion) > 5000 ORDER BY Localidad ASC;
-		5. Calcula la cantidad total facturada por cada cliente (uso de “unwind”)
+		### 5. Calcula la cantidad total facturada por cada cliente (uso de “unwind”)
 		SELECT id_cliente "IDENTIFICADOR", nombre "NOMBRE COMPLETO", SUM (Precio_unidad * Pedidos) "TOTAL CLIENTE" FROM pedidos GROUP BY id_cliente, nombre ORDER BY 2 DESC
 		
 		
@@ -77,9 +79,9 @@ Vamos a utilizar la base de datos libre GeoWorldMap de GeoBytes. Es una base de 
 		mongoimport -u <user> -p <clave> --db <bd> --collection cities --type csv --headerline --file /var/tmp/Cities.csv
 
 Las tareas a realizar en este caso son las siguientes:
-1. Encontrar las ciudades más cercanas sobre la colección recién creada mediante un enfoque MapReduce conforme a los pasos que se ilustran en el tutorial práctico.
+### 1. Encontrar las ciudades más cercanas sobre la colección recién creada mediante un enfoque MapReduce conforme a los pasos que se ilustran en el tutorial práctico.
 
-2. ¿Cómo podríamos obtener la ciudades más distantes en cada país?
-3. ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
-4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?.5. ¿Cómo podríamos la distancia media entre las ciudades de cada país?.
-6. ¿Mejoraría el rendimiento si creamos un índice? ¿Sobre que campo?Comprobadlo.
+### 2. ¿Cómo podríamos obtener la ciudades más distantes en cada país?
+### 3. ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
+### 4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?.### 5. ¿Cómo podríamos la distancia media entre las ciudades de cada país?.
+### 6. ¿Mejoraría el rendimiento si creamos un índice? ¿Sobre que campo? Comprobadlo.
