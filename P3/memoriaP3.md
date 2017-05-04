@@ -724,9 +724,162 @@ Si queremos solo los clientes, deberemos añadir, Productos:0 como hemos visto e
 	}
 
 ### 9. Datos personales (id_cliente, Nombre, Direccion, Localidad y Fnacimiento) de los clientes cuyo nombre empieza por la cadena "c" (No distinguir entre mayusculas y minúsculas).
+
+
+	db.pedidos.find({"Nombre": /^c/i}, {"_id": 0, "Pedidos":0} ).pretty();
+	
+La salida es la siguiente:
+
+	{
+		"id_cliente" : 3333,
+		"Nombre" : "Carlos Montes",
+		"Direccion" : "Salsipuedes 13",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+		"Facturacion" : 8000
+	}
+	{
+		"id_cliente" : 4444,
+		"Nombre" : "Carmelo Coton",
+		"Direccion" : "La Luna 103",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+		"Facturacion" : 12300
+	}
+	{
+		"id_cliente" : 5555,
+		"Nombre" : "Cristina Miralles",
+		"Direccion" : "San Fernando 28",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+		"Facturacion" : 16500
+	}
+	{
+		"id_cliente" : 6666,
+		"Nombre" : "Chema Pamundi",
+		"Direccion" : "Recogidas 54",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+		"Facturacion" : 5000
+	}
 ### 10. Visualiza los datos personales de los clientes (excluyendo _id). Limita los documentos a 4.
 
+	db.pedidos.find({},{"_id": 0, "Pedidos":0}).limit(4).pretty();
+
+
+	{
+		"id_cliente" : 1111,
+		"Nombre" : "Pedro Ramirez",
+		"Direccion" : "Calle Los Romeros 14",
+		"Localidad" : "Sevilla",
+		"Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+		"Facturacion" : 5000
+	}
+	{
+		"id_cliente" : 2222,
+		"Nombre" : "Juan Gomez",
+		"Direccion" : "Perpetuo Socorro 9",
+		"Localidad" : "Salamanca",
+		"Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+		"Facturacion" : 6500
+	}
+	{
+		"id_cliente" : 3333,
+		"Nombre" : "Carlos Montes",
+		"Direccion" : "Salsipuedes 13",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+		"Facturacion" : 8000
+	}
+	{
+		"id_cliente" : 4444,
+		"Nombre" : "Carmelo Coton",
+		"Direccion" : "La Luna 103",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+		"Facturacion" : 12300
+	}
+
+
 ### 11. Ídem anterior pero ordenando los documentos por Localidad (ascendente) e id_cliente (descendente).
+
+	db.pedidos.find({},{"_id": 0, "Pedidos":0}).sort({Localidad: 1}).limit(4).pretty();
+
+	db.pedidos.find({},{"_id": 0, "Pedidos":0}).sort({id_cliente: -1}).limit(4).pretty();
+
+Salida ordenado por localidad ascendente:
+
+	{
+		"id_cliente" : 5555,
+		"Nombre" : "Cristina Miralles",
+		"Direccion" : "San Fernando 28",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+		"Facturacion" : 16500
+	}
+	{
+		"id_cliente" : 6666,
+		"Nombre" : "Chema Pamundi",
+		"Direccion" : "Recogidas 54",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+		"Facturacion" : 5000
+	}
+	{
+		"id_cliente" : 3333,
+		"Nombre" : "Carlos Montes",
+		"Direccion" : "Salsipuedes 13",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+		"Facturacion" : 8000
+	}
+	{
+		"id_cliente" : 4444,
+		"Nombre" : "Carmelo Coton",
+		"Direccion" : "La Luna 103",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+		"Facturacion" : 12300
+	}
+
+
+
+Salida ordenado por id_cliente descendente:
+
+	{
+		"id_cliente" : 6666,
+		"Nombre" : "Chema Pamundi",
+		"Direccion" : "Recogidas 54",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+		"Facturacion" : 5000
+	}
+	{
+		"id_cliente" : 5555,
+		"Nombre" : "Cristina Miralles",
+		"Direccion" : "San Fernando 28",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+		"Facturacion" : 16500
+	}
+	{
+		"id_cliente" : 4444,
+		"Nombre" : "Carmelo Coton",
+		"Direccion" : "La Luna 103",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+		"Facturacion" : 12300
+	}
+	{
+		"id_cliente" : 3333,
+		"Nombre" : "Carlos Montes",
+		"Direccion" : "Salsipuedes 13",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+		"Facturacion" : 8000
+	}
+
+
 
 ## Objetivo 2
 
