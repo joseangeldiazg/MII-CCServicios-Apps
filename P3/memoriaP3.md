@@ -30,7 +30,206 @@ Crear la colección pedidos en cada BD asociada a vuestro usuario, sobre la que
 		
 Esto nos ofrecerá la siguiente salida, donde podemos apreciar la coleccion pedidos, compuesta de **documentos** clientes, que a su vez pueden contener pedidos, que vuelve a ser un **documento**  y a su vez se compone de Productos. 
 	
-![Coleccion pedidos](./img/sal1.png "Coleccion pedidos")
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910b"),
+		"id_cliente" : 1111,
+		"Nombre" : "Pedro Ramirez",
+		"Direccion" : "Calle Los Romeros 14",
+		"Localidad" : "Sevilla",
+		"Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+		"Facturacion" : 5000,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 390,
+						"Cantidad" : 1
+					},
+					{
+						"id_producto" : 2,
+						"Nombre" : "Tablet 8 pulgadas",
+						"Precio_unidad" : 95,
+						"Cantidad" : 1
+					}
+				]
+			},
+			{
+				"id_pedido" : 2,
+				"Productos" : [
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 115,
+						"Cantidad" : 3
+					}
+				]
+			}
+		]
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910c"),
+		"id_cliente" : 2222,
+		"Nombre" : "Juan Gomez",
+		"Direccion" : "Perpetuo Socorro 9",
+		"Localidad" : "Salamanca",
+		"Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+		"Facturacion" : 6500,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 100,
+						"Cantidad" : 1
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 455,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 27,
+						"Nombre" : "Cable USB",
+						"Precio_unidad" : 11,
+						"Cantidad" : 12
+					}
+				]
+			},
+			{
+				"id_pedido" : 2,
+				"Productos" : [
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 128,
+						"Cantidad" : 3
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 451,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 21,
+						"Nombre" : "Disco Duro 500GB",
+						"Precio_unidad" : 99,
+						"Cantidad" : 10
+					}
+				]
+			},
+			{
+				"id_pedido" : 3,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 94,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 95,
+						"Nombre" : "SAI 5H Mod. 258",
+						"Precio_unidad" : 213,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 21,
+						"Precio_unidad" : 66,
+						"Nombre" : "Disco Duro 500GB",
+						"Cantidad" : 10
+					}
+				]
+			}
+		]
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910d"),
+		"id_cliente" : 3333,
+		"Nombre" : "Carlos Montes",
+		"Direccion" : "Salsipuedes 13",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+		"Facturacion" : 8000
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910e"),
+		"id_cliente" : 4444,
+		"Nombre" : "Carmelo Coton",
+		"Direccion" : "La Luna 103",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+		"Facturacion" : 12300
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910f"),
+		"id_cliente" : 5555,
+		"Nombre" : "Cristina Miralles",
+		"Direccion" : "San Fernando 28",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+		"Facturacion" : 16500,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 95,
+						"Nombre" : "SAI 5H Mod. 258",
+						"Precio_unidad" : 211,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Precio_unidad" : 460,
+						"Fabricante" : "Intel",
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 119,
+						"Cantidad" : 2
+					}
+				]
+			}
+		]
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab699110"),
+		"id_cliente" : 6666,
+		"Nombre" : "Chema Pamundi",
+		"Direccion" : "Recogidas 54",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+		"Facturacion" : 5000
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab699111"),
+		"id_cliente" : 777,
+		"Nombre" : "Alberto Matero",
+		"Direccion" : "Pelayo 4",
+		"Localidad" : "Sevilla",
+		"Facturacion" : 2500,
+		"Pedidos" : null
+	}
+
+
 
 ### 2-  Visualiza sólo el primer documento de la colección. Utiliza los métodos ``.limit()`` y ``.findOne()``.
 
@@ -38,23 +237,492 @@ Esto nos ofrecerá la siguiente salida, donde podemos apreciar la coleccion pedi
 	
 	db.pedidos.find().limit(1).pretty();
 
-``Limit`` funciona de manera similar a SQL y findOne() podemos compararlo con ``SELECT TOP 1 FROM...``		
+``Limit`` funciona de manera similar a SQL y findOne() podemos compararlo con ``SELECT TOP 1 FROM...``	La salida es la siguiente:
+
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910b"),
+		"id_cliente" : 1111,
+		"Nombre" : "Pedro Ramirez",
+		"Direccion" : "Calle Los Romeros 14",
+		"Localidad" : "Sevilla",
+		"Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+		"Facturacion" : 5000,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 390,
+						"Cantidad" : 1
+					},
+					{
+						"id_producto" : 2,
+						"Nombre" : "Tablet 8 pulgadas",
+						"Precio_unidad" : 95,
+						"Cantidad" : 1
+					}
+				]
+			},
+			{
+				"id_pedido" : 2,
+				"Productos" : [
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 115,
+						"Cantidad" : 3
+					}
+				]
+			}
+		]
+	}
 ### 3- Visualiza el cliente con id_cliente = 2222
 
 	db.pedidos.find({id_cliente: 2222}).pretty();
 	
-Para simular la clausula WHERE de SQL, introduciremos las restricciones dentro de llaves en la instrucción ``find``. 	
+Para simular la clausula WHERE de SQL, introduciremos las restricciones dentro de llaves en la instrucción ``find``. La salida es la siguiente:
+
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910c"),
+		"id_cliente" : 2222,
+		"Nombre" : "Juan Gomez",
+		"Direccion" : "Perpetuo Socorro 9",
+		"Localidad" : "Salamanca",
+		"Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+		"Facturacion" : 6500,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 100,
+						"Cantidad" : 1
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 455,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 27,
+						"Nombre" : "Cable USB",
+						"Precio_unidad" : 11,
+						"Cantidad" : 12
+					}
+				]
+			},
+			{
+				"id_pedido" : 2,
+				"Productos" : [
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 128,
+						"Cantidad" : 3
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 451,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 21,
+						"Nombre" : "Disco Duro 500GB",
+						"Precio_unidad" : 99,
+						"Cantidad" : 10
+					}
+				]
+			},
+			{
+				"id_pedido" : 3,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 94,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 95,
+						"Nombre" : "SAI 5H Mod. 258",
+						"Precio_unidad" : 213,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 21,
+						"Precio_unidad" : 66,
+						"Nombre" : "Disco Duro 500GB",
+						"Cantidad" : 10
+					}
+				]
+			}
+		]
+	}
+	
 ### 4- Visualiza los clientes que hayan pedido algún producto de más de 94 euros.
 
 	db.pedidos.find({"Pedidos.Productos.Precio_unidad":{$gt:94}}).pretty();
 		
 Como vemos es más sencillo que SQL, ya que en ese caso tendríamos que haber realizado reuniones por claves entre tablas para haber obtenido todo. 
+
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910b"),
+		"id_cliente" : 1111,
+		"Nombre" : "Pedro Ramirez",
+		"Direccion" : "Calle Los Romeros 14",
+		"Localidad" : "Sevilla",
+		"Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+		"Facturacion" : 5000,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 390,
+						"Cantidad" : 1
+					},
+					{
+						"id_producto" : 2,
+						"Nombre" : "Tablet 8 pulgadas",
+						"Precio_unidad" : 95,
+						"Cantidad" : 1
+					}
+				]
+			},
+			{
+				"id_pedido" : 2,
+				"Productos" : [
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 115,
+						"Cantidad" : 3
+					}
+				]
+			}
+		]
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910c"),
+		"id_cliente" : 2222,
+		"Nombre" : "Juan Gomez",
+		"Direccion" : "Perpetuo Socorro 9",
+		"Localidad" : "Salamanca",
+		"Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+		"Facturacion" : 6500,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 100,
+						"Cantidad" : 1
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 455,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 27,
+						"Nombre" : "Cable USB",
+						"Precio_unidad" : 11,
+						"Cantidad" : 12
+					}
+				]
+			},
+			{
+				"id_pedido" : 2,
+				"Productos" : [
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 128,
+						"Cantidad" : 3
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 451,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 21,
+						"Nombre" : "Disco Duro 500GB",
+						"Precio_unidad" : 99,
+						"Cantidad" : 10
+					}
+				]
+			},
+			{
+				"id_pedido" : 3,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 94,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 95,
+						"Nombre" : "SAI 5H Mod. 258",
+						"Precio_unidad" : 213,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 21,
+						"Precio_unidad" : 66,
+						"Nombre" : "Disco Duro 500GB",
+						"Cantidad" : 10
+					}
+				]
+			}
+		]
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910f"),
+		"id_cliente" : 5555,
+		"Nombre" : "Cristina Miralles",
+		"Direccion" : "San Fernando 28",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+		"Facturacion" : 16500,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 95,
+						"Nombre" : "SAI 5H Mod. 258",
+						"Precio_unidad" : 211,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Precio_unidad" : 460,
+						"Fabricante" : "Intel",
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 119,
+						"Cantidad" : 2
+					}
+				]
+			}
+		]
+	}
+
+
 ### 5. Visualiza los clientes de Jaén o Salamanca (excluye los datos de los pedidos). Utiliza los operador ``$or e $in``
 
-	db.pedidos.find({"Pedidos.Localidad":{$in:"Jaen" $or:"Salamanca"}})
+Las consultas serían las siguientes:
+
+	db.pedidos.find({Localidad:{$in:["Jaen","Salamanca"]}},
+		{Pedidos:0}).pretty();
+	
+	db.pedidos.find({$or:[{Localidad: "Salamanca"},{Localidad: "Jaen"}]}, {Pedidos:0}).pretty();
+	
+Por otro lado la salida sería:
+
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910c"),
+		"id_cliente" : 2222,
+		"Nombre" : "Juan Gomez",
+		"Direccion" : "Perpetuo Socorro 9",
+		"Localidad" : "Salamanca",
+		"Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+		"Facturacion" : 6500
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910d"),
+		"id_cliente" : 3333,
+		"Nombre" : "Carlos Montes",
+		"Direccion" : "Salsipuedes 13",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+		"Facturacion" : 8000
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910e"),
+		"id_cliente" : 4444,
+		"Nombre" : "Carmelo Coton",
+		"Direccion" : "La Luna 103",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+		"Facturacion" : 12300
+	}	
 ### 6. Visualiza los clientes no tienen campo pedidos.
+
+	db.pedidos.find({Pedidos:{$exists:false}}).pretty();
+	
+Lo que nos ofrecería la siguiente salida:
+
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910d"),
+		"id_cliente" : 3333,
+		"Nombre" : "Carlos Montes",
+		"Direccion" : "Salsipuedes 13",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+		"Facturacion" : 8000
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910e"),
+		"id_cliente" : 4444,
+		"Nombre" : "Carmelo Coton",
+		"Direccion" : "La Luna 103",
+		"Localidad" : "Jaen",
+		"Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+		"Facturacion" : 12300
+	}
+	{
+		"_id" : ObjectId("590a4bd049da4408ab699110"),
+		"id_cliente" : 6666,
+		"Nombre" : "Chema Pamundi",
+		"Direccion" : "Recogidas 54",
+		"Localidad" : "Granada",
+		"Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+		"Facturacion" : 5000
+	}
+	
 ### 7. Visualiza los clientes que hayan nacido en 1963.
+
+Para los rangos de fecha deberemos crear un nuevo "objeto" fecha ya que de otro modo se comportarán como strings. 
+
+	db.pedidos.find({Fnacimiento:{$gte: ISODate("1963-01-01T00:00:00.000Z"), $lt: ISODate("1964-01-01T00:00:00.000Z") }},{Pedidos:0}).pretty();
+	
+Por lo que la salida será solo el siguiente usuario:
+
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910b"),
+		"id_cliente" : 1111,
+		"Nombre" : "Pedro Ramirez",
+		"Direccion" : "Calle Los Romeros 14",
+		"Localidad" : "Sevilla",
+		"Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+		"Facturacion" : 5000
+	}	
 ### 8. Visualiza los clientes que hayan pedido algún producto fabricado por Canon y algún producto cuyo precio sea inferior a 15 euros
+
+	db.pedidos.find({"Pedidos.Productos.Fabricante":"Canon", "Pedidos.Productos.Precio_unidad":{$lt:15}}).pretty();
+	
+Si queremos solo los clientes, deberemos añadir, Productos:0 como hemos visto en secciones anteriores. En nuestro caso, lo mostramos todo:
+
+	{
+		"_id" : ObjectId("590a4bd049da4408ab69910c"),
+		"id_cliente" : 2222,
+		"Nombre" : "Juan Gomez",
+		"Direccion" : "Perpetuo Socorro 9",
+		"Localidad" : "Salamanca",
+		"Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+		"Facturacion" : 6500,
+		"Pedidos" : [
+			{
+				"id_pedido" : 1,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 100,
+						"Cantidad" : 1
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 455,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 27,
+						"Nombre" : "Cable USB",
+						"Precio_unidad" : 11,
+						"Cantidad" : 12
+					}
+				]
+			},
+			{
+				"id_pedido" : 2,
+				"Productos" : [
+					{
+						"id_producto" : 77,
+						"Nombre" : "Impresora Laser",
+						"Fabricante" : "Canon",
+						"Precio_unidad" : 128,
+						"Cantidad" : 3
+					},
+					{
+						"id_producto" : 42,
+						"Nombre" : "Portatil ASM Mod. 254",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 451,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 21,
+						"Nombre" : "Disco Duro 500GB",
+						"Precio_unidad" : 99,
+						"Cantidad" : 10
+					}
+				]
+			},
+			{
+				"id_pedido" : 3,
+				"Productos" : [
+					{
+						"id_producto" : 1,
+						"Nombre" : "Pentium IV",
+						"Fabricante" : "Intel",
+						"Precio_unidad" : 94,
+						"Cantidad" : 5
+					},
+					{
+						"id_producto" : 95,
+						"Nombre" : "SAI 5H Mod. 258",
+						"Precio_unidad" : 213,
+						"Cantidad" : 2
+					},
+					{
+						"id_producto" : 21,
+						"Precio_unidad" : 66,
+						"Nombre" : "Disco Duro 500GB",
+						"Cantidad" : 10
+					}
+				]
+			}
+		]
+	}
+
 ### 9. Datos personales (id_cliente, Nombre, Direccion, Localidad y Fnacimiento) de los clientes cuyo nombre empieza por la cadena "c" (No distinguir entre mayusculas y minúsculas).
 ### 10. Visualiza los datos personales de los clientes (excluyendo _id). Limita los documentos a 4.
 
