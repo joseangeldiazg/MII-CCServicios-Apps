@@ -886,6 +886,10 @@ Salida ordenado por id_cliente descendente:
 A partir de la colección pedidos utilizaremos consultas más complejas por medio de los operadores de agregación (pipeline). Por facilidad se indica la consulta en formato SQL estándar. Las tareas a realizar en este caso obtener:
 ### 1. No total de clientes:	
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos;
+	
+La consulta en MongoDB sería ``db.pedidos.find().count();`` cuyo resltado sería el número de clientes en la **colección** pedidos en este caso, **7**.	
+
+	
 	### 2. No total de clientes de Jaén:
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos WHERE Localidad = "Jaen";
 		### 3. Facturación total clientes por localidad		SELECT Localidad, SUM (Facturacion) "TOTAL" FROM pedidos GROUP BY Localidad;### 4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
