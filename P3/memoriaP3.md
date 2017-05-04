@@ -888,11 +888,32 @@ A partir de la colección pedidos utilizaremos consultas más complejas por me
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos;
 	
 La consulta en MongoDB sería ``db.pedidos.find().count();`` cuyo resltado sería el número de clientes en la **colección** pedidos en este caso, **7**.	
-
 	
 	### 2. No total de clientes de Jaén:
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos WHERE Localidad = "Jaen";
-		### 3. Facturación total clientes por localidad		SELECT Localidad, SUM (Facturacion) "TOTAL" FROM pedidos GROUP BY Localidad;### 4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
+		
+La consulta en MongoDB sería ``db.pedidos.find({Localidad:"Jaen"}).count()`` que nos dará como resultado **2**.
+		### 3. Facturación total clientes por localidad		SELECT Localidad, SUM (Facturacion) "TOTAL" FROM pedidos GROUP BY Localidad;
+		
+Para esta consulta en lugar de find, deberemos usar aggregate. 		
+		
+		db.pedidos.aggregate(
+			[
+				{
+					$group:{
+						"_id": "$Localidad",
+						TOTAL: {$sum: "$Facturacion"}
+					}
+				}
+			]
+		)
+		
+La salida es la siguiente:
+
+	{ "_id" : "Granada", "TOTAL" : 21500 }
+	{ "_id" : "Jaen", "TOTAL" : 20300 }
+	{ "_id" : "Salamanca", "TOTAL" : 6500 }
+	{ "_id" : "Sevilla", "TOTAL" : 7500 }	### 4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
 		SELECT Localidad, AVG (Facturacion) "FACTURACION MEDIA" FROM pedido WHERE Localidad <> "Jaen" GROUP BY Localidad HAVING AVG (Facturacion) > 5000 ORDER BY Localidad ASC;
 		### 5. Calcula la cantidad total facturada por cada cliente (uso de “unwind”)
 		SELECT id_cliente "IDENTIFICADOR", nombre "NOMBRE COMPLETO", SUM (Precio_unidad * Pedidos) "TOTAL CLIENTE" FROM pedidos GROUP BY id_cliente, nombre ORDER BY 2 DESC
