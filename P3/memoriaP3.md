@@ -28,7 +28,7 @@ Crear la colección pedidos en cada BD asociada a vuestro usuario, sobre la que
 
 		db.pedidos.find().pretty();
 		
-Esto nos ofrecerá la siguiente salida, donde podemos apreciar la coleccion pedidos, compuesta de **documentos** clientes, que a su vez pueden contener pedidos, que vuelve a ser un **documento**  y a su vez se compone de Productos. 
+Esto nos ofrecerá la siguiente salida, donde podemos apreciar la colección pedidos, compuesta de **documentos** clientes, que a su vez pueden contener pedidos, que vuelve a ser un **documento**  y a su vez se compone de Productos. 
 	
 	{
 		"_id" : ObjectId("590a4bd049da4408ab69910b"),
@@ -631,7 +631,7 @@ Por lo que la salida será solo el siguiente usuario:
 		"Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
 		"Facturacion" : 5000
 	}	
-### 8. Visualiza los clientes que hayan pedido algún producto fabricado por Canon y algún producto cuyo precio sea inferior a 15 euros
+### 8. Visualiza los clientes que hayan pedido algún producto fabricado por Canon y algún producto cuyo precio sea inferior a 15 euros.
 
 	db.pedidos.find({"Pedidos.Productos.Fabricante":"Canon", "Pedidos.Productos.Precio_unidad":{$lt:15}}).pretty();
 	
@@ -767,6 +767,8 @@ La salida es la siguiente:
 	db.pedidos.find({},{"_id": 0, "Pedidos":0}).limit(4).pretty();
 
 
+La salida es:
+
 	{
 		"id_cliente" : 1111,
 		"Nombre" : "Pedro Ramirez",
@@ -887,7 +889,7 @@ A partir de la colección pedidos utilizaremos consultas más complejas por me
 ### 1. No total de clientes:	
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos;
 	
-La consulta en MongoDB sería ``db.pedidos.find().count();`` cuyo resltado sería el número de clientes en la **colección** pedidos en este caso, **7**.	
+La consulta en MongoDB sería ``db.pedidos.find().count();`` cuyo resultado sería el número de clientes en la **colección** pedidos en este caso, **7**.	
 	
 	### 2. No total de clientes de Jaén:
 		SELECT COUNT(*) "NUMERO DE CLIENTES" FROM pedidos WHERE Localidad = "Jaen";
@@ -916,7 +918,7 @@ La salida es la siguiente:
 	{ "_id" : "Sevilla", "TOTAL" : 7500 }	### 4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
 		SELECT Localidad, AVG (Facturacion) "FACTURACION MEDIA" FROM pedido WHERE Localidad <> "Jaen" GROUP BY Localidad HAVING AVG (Facturacion) > 5000 ORDER BY Localidad ASC;
 	
-Para esta consulta de nuevo tendremos que crear un ``aggregate`` que contenga las distintas clausuras. Las clausulas que reduzcan el conjunto objetivo como por ejemplo Match, deberán ir en las primeras posiciones para evitar, por ejemplo, ordenar datos que luego no formarán parte de la salida. Por lo que aunque hay diversas maneras de realizar esta consulta, el orden óptimo sería el siguiente, ya que aunque en este ejemplo tenemos pocos resultados, en un entorno de BigData sobre los que Mongo obtiene toda su potencia, este pequeño cambio podria suponer ahorrarnos mucho tiempo de computo. La salida es la siguiente:
+Para esta consulta de nuevo tendremos que crear un ``aggregate`` que contenga las distintas clausuras. Las cláusulas que reduzcan el conjunto objetivo como por ejemplo Match, deberán ir en las primeras posiciones para evitar, por ejemplo, ordenar datos que luego no formarán parte de la salida. Por lo que aunque hay diversas maneras de realizar esta consulta, el orden óptimo sería el siguiente, ya que aunque en este ejemplo tenemos pocos resultados, en un entorno de BigData sobre los que Mongo obtiene toda su potencia, este pequeño cambio podría suponer ahorrarnos mucho tiempo de computo. La salida es la siguiente:
 
 		
 		db.pedidos.aggregate(
@@ -952,7 +954,6 @@ Para esta consulta de nuevo tendremos que crear un ``aggregate`` que contenga la
 		SELECT id_cliente "IDENTIFICADOR", nombre "NOMBRE COMPLETO", SUM (Precio_unidad * Pedidos) "TOTAL CLIENTE" FROM pedidos GROUP BY id_cliente, nombre ORDER BY 2 DESC
 		
 La consulta en mongo ahora sería la siguiente:		
-		
 		
 		db.pedidos.aggregate(
 			[
@@ -1491,5 +1492,145 @@ Y tendremos la siguiente salida:
 	}
 
 ### 3. ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
-### 4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?.### 5. ¿Cómo podríamos obtener la distancia media entre las ciudades de cada país?.
+
+Lo que ocurre es que solo mantendriamos la primera opción, ya que se evalua la condición para coger las ciudades como < estricto en el caso de las más cercanas o > en el caso de las más lejanas, lo que hará que si aparece otra con el mismo valor no se coja. Podriamos cambiar los signos por >=  o <= pero entonces solo nos quedariamos con la última que cumpliera el requisito, por lo tanto necesitamos crear una estructura y guardarlas. 
+
+
+	var finalize =  function (key, reduced) {
+    if (reduced.data.length == 1) {
+        return { 
+            "message" : "Este país solo contiene una ciudad" 
+        };
+    }
+    var min_dist = 999999999999;
+    var city1 = { 
+        "city": ""
+    };
+    var city2 = { 
+        "city": "" 
+    };
+    var c1;
+    var c2;
+    var d;
+    for (var i in reduced.data) {
+        for (var j in reduced.data) {
+            if (i >= j) {
+                continue;
+            }
+            c1 = reduced.data[i];
+            c2 = reduced.data[j];
+            d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+            if (d < min_dist && d > 0) {
+                min_dist = d;
+                cities = [];
+                cities.push([c1.city, c2.city]);
+                
+            }else if (else if (d == min_dist))
+            {
+                	cities.push([c1.city, c2.city]);
+            }
+        }
+    }
+    return {
+        "cities": cities,
+        "dist": Math.sqrt(min_dist) 
+    };
+	}
+
+### 4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?.
+
+Este punto es sencillo, solo tendríamos que incrementar un contador y devolverlo en el return de la función ``finalize``. 
+
+
+		var finalize =  function (key, reduced) {
+			if (reduced.data.length == 1) {
+				return { 
+		            "message" : "Este país solo contiene una ciudad" 
+		        };
+			}
+			var min_dist = 999999999999;
+			var city1 = { 
+		        "city": ""
+		    };
+			var city2 = { 
+		        "city": "" 
+		    };
+			var c1;
+			var c2;
+			var d;
+			var contador=0;
+			for (var i in reduced.data) {
+				for (var j in reduced.data) {
+					if (i >= j) {
+		                continue;
+		            }
+					c1 = reduced.data[i];
+					c2 = reduced.data[j];
+					d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+					if (d > 0) {
+						contador=contador+1;
+						if(){
+							min_dist = d;
+							city1 = c1;
+							city2 = c2;
+						}
+					}
+				}
+			}
+			return {
+		        "city1" : city1.city, 
+		        "city2" : city2.city, 
+		        "evaluations: "contador,
+		        "dist": Math.sqrt(min_dist)        
+		    };
+		}### 5. ¿Cómo podríamos obtener la distancia media entre las ciudades de cada país?
+
+Como ya tenemos un contador con el número total de ciudades evaluadas, solo tendríamos que acumular todas las distancias de las ciudades que se comparen y a la hora de devolverlas haremos el total entre el número de ciudades. 
+
+
+	var finalize =  function (key, reduced) {
+			if (reduced.data.length == 1) {
+				return { 
+		            "message" : "Este país solo contiene una ciudad" 
+		        };
+			}
+			var min_dist = 999999999999;
+			var city1 = { 
+		        "city": ""
+		    };
+			var city2 = { 
+		        "city": "" 
+		    };
+			var c1;
+			var c2;
+			var d;
+			var contador=0;
+			var distancia_total=0;
+			for (var i in reduced.data) {
+				for (var j in reduced.data) {
+					if (i >= j) {
+		                continue;
+		            }
+					c1 = reduced.data[i];
+					c2 = reduced.data[j];
+					d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+					if (d > 0) {
+						contador=contador+1;
+						distancia_total=distancia_total+d;
+						if(){
+							min_dist = d;
+							city1 = c1;
+							city2 = c2;
+						}
+					}
+				}
+			}
+			return {
+		        "city1" : city1.city, 
+		        "city2" : city2.city, 
+		        "Distancia Media" : distancia_total/contador,
+		        "dist": Math.sqrt(min_dist)        
+		    };
+		}
+
 ### 6. ¿Mejoraría el rendimiento si creamos un índice? ¿Sobre que campo? Comprobadlo.
