@@ -915,8 +915,90 @@ La salida es la siguiente:
 	{ "_id" : "Salamanca", "TOTAL" : 6500 }
 	{ "_id" : "Sevilla", "TOTAL" : 7500 }	### 4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
 		SELECT Localidad, AVG (Facturacion) "FACTURACION MEDIA" FROM pedido WHERE Localidad <> "Jaen" GROUP BY Localidad HAVING AVG (Facturacion) > 5000 ORDER BY Localidad ASC;
-		### 5. Calcula la cantidad total facturada por cada cliente (uso de “unwind”)
+	
+Para esta consulta de nuevo tendremos que crear un ``aggregate`` que contenga las distintas clausuras. Las clausulas que reduzcan el conjunto objetivo como por ejemplo Match, deberán ir en las primeras posiciones para evitar, por ejemplo, ordenar datos que luego no formarán parte de la salida. Por lo que aunque hay diversas maneras de realizar esta consulta, el orden óptimo sería el siguiente, ya que aunque en este ejemplo tenemos pocos resultados, en un entorno de BigData sobre los que Mongo obtiene toda su potencia, este pequeño cambio podria suponer ahorrarnos mucho tiempo de computo. La salida es la siguiente:
+
+		
+		db.pedidos.aggregate(
+			[
+				{
+					$group:{
+						"_id": "$Localidad",
+						"FACTURACION MEDIA": {$avg: "$Facturacion"}
+					}
+				},
+				{	
+					$match:{
+						"_id":{$ne: "Jaen"},
+						"FACTURACION MEDIA":{$gt: 5000}
+					}
+				},
+				{
+					$project:{
+						 "_id":0,
+						 "Localidad": {$toUpper: "$_id"},
+						 "FACTURACION MEDIA": 1
+					}
+				},
+				{
+					$sort:{
+						"_id":1
+					}
+				}
+			]
+		)
+		
+					### 5. Calcula la cantidad total facturada por cada cliente (uso de “unwind”)
 		SELECT id_cliente "IDENTIFICADOR", nombre "NOMBRE COMPLETO", SUM (Precio_unidad * Pedidos) "TOTAL CLIENTE" FROM pedidos GROUP BY id_cliente, nombre ORDER BY 2 DESC
+		
+La consulta en mongo ahora sería la siguiente:		
+		
+		
+		db.pedidos.aggregate(
+			[
+				{ 
+					$unwind:"$Pedidos"
+				},
+				{ 
+					$unwind:"$Pedidos.Productos"
+				},
+				{
+					$group:{
+						"_id": {
+							"ID":"$id_cliente",
+							"NOM":"$Nombre"
+						},	
+						"TOTAL CLIENTE": {
+							$sum: {
+								$multiply:
+								 ["$Pedidos.Productos.Precio_unidad",
+								 "$Pedidos.Productos.Cantidad"]
+							}
+						}
+					}
+				},
+				{
+					$project:{
+						 "_id":0,
+						 "IDENTIFICADOR":"$_id.ID",
+						 "NOMBRE COMPLETO":"$_id.NOM" ,
+						 "TOTAL CLIENTE": 1
+					}
+				},
+				{
+					$sort:{
+						"NOMBRE COMPLETO":-1
+					}
+				}
+			]
+		)
+		
+
+Tras ejecutarla tendríamos la siguiente salida. 
+
+	{ "TOTAL CLIENTE" : 830, "IDENTIFICADOR" : 1111, "NOMBRE COMPLETO" : "Pedro Ramirez" }
+	{ "TOTAL CLIENTE" : 6327, "IDENTIFICADOR" : 2222, "NOMBRE COMPLETO" : "Juan Gomez" }
+	{ "TOTAL CLIENTE" : 1580, "IDENTIFICADOR" : 5555, "NOMBRE COMPLETO" : "Cristina Miralles" }
 		
 		
 ## Objetivo 3
@@ -941,7 +1023,7 @@ Por último importamos la base de datos:
 
 	mongoimport  --db mongobd --collection cities --type csv --headerline --file /home/Cities.csv
 
-Una vez hecho esto ya estamos en posicion de realizar las siguientes tareas. 
+Una vez hecho esto ya estamos en posición de realizar las siguientes tareas. 
 ### 1. Encontrar las ciudades más cercanas sobre la colección recién creada mediante un enfoque MapReduce conforme a los pasos que se ilustran en el tutorial práctico.
 
 ### 2. ¿Cómo podríamos obtener la ciudades más distantes en cada país?
