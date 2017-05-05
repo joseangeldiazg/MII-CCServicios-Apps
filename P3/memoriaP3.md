@@ -1026,7 +1026,470 @@ Por último importamos la base de datos:
 Una vez hecho esto ya estamos en posición de realizar las siguientes tareas. 
 ### 1. Encontrar las ciudades más cercanas sobre la colección recién creada mediante un enfoque MapReduce conforme a los pasos que se ilustran en el tutorial práctico.
 
+El primer paso será la funcion ``emit()`` esta recibe dos parámetros, la clave, que será el elemento por el que dividiremos o agruparemos y el valor, que podrá ser una estructura que contenga todos los valores que necesitemos para procesar en siguientes puntos.
+
+
+	var mapCode = function() {
+	    emit(
+	        this.CountryID,
+	        { 
+	            "data":
+	            [
+	                {
+	                    "city": this.City,
+	                    "lat":  this.Latitude,
+	                    "lon":  this.Longitude
+	                }
+	            ]
+	        }
+	    );
+	}
+	
+	
+Ahora que tenemos completa la etapa **MAP** tendremos que implementar una función para la etapa **REDUCE**. 
+
+	var reduceCode = function(key, values) {
+		var reduced = { 
+	        "data": [] 
+	    };
+		for (var i in values) {
+			var inter = values[i];
+			for (var j in inter.data) {
+				reduced.data.push(inter.data[j]);
+			}
+		}
+		return reduced;
+	}	
+	
+Por último en la función **finalice** se encarga de aplicar la logica a lo que queremos calcular. 
+
+	var finalize =  function (key, reduced) {
+		if (reduced.data.length == 1) {
+			return { 
+	            "message" : "Este país solo contiene una ciudad" 
+	        };
+		}
+		var min_dist = 999999999999;
+		var city1 = { 
+	        "city": ""
+	    };
+		var city2 = { 
+	        "city": "" 
+	    };
+		var c1;
+		var c2;
+		var d;
+		for (var i in reduced.data) {
+			for (var j in reduced.data) {
+				if (i >= j) {
+	                continue;
+	            }
+				c1 = reduced.data[i];
+				c2 = reduced.data[j];
+				d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+				if (d < min_dist && d > 0) {
+					min_dist = d;
+					city1 = c1;
+					city2 = c2;
+				}
+			}
+		}
+		return {
+	        "city1": city1.city, 
+	        "city2": city2.city, 
+	        "dist": Math.sqrt(min_dist) 
+	    };
+	}
+
+El paso final es ejecutar el modelo que hemos creado:
+
+	db.runCommand({
+	    mapReduce: "cities",
+	    map: mapCode,
+	    reduce: reduceCode,
+	    finalize: finalize,
+	    query: { CountryID: { $ne: 254 } },
+	    out: { merge: "ciudades_proximas" }
+	});
+	
+	db.ciudades_proximas.find().pretty();
+
+La salida, limitada a los primeros 20 resultados es:
+
+	{
+		"_id" : 1,
+		"value" : {
+			"city1" : "Kabul",
+			"city2" : "Mazar-e Sharif",
+			"dist" : 3.0173461849777947
+		}
+	}
+	{
+		"_id" : 2,
+		"value" : {
+			"city1" : "Korce",
+			"city2" : "Tirane",
+			"dist" : 1.1860178118392657
+		}
+	}
+	{
+		"_id" : 3,
+		"value" : {
+			"city1" : "Oran",
+			"city2" : "Mascara",
+			"dist" : 0.8365004482963547
+		}
+	}
+	{
+		"_id" : 4,
+		"value" : {
+			"city1" : "",
+			"city2" : "",
+			"dist" : 999999.9999995
+		}
+	}
+	{
+		"_id" : 5,
+		"value" : {
+			"city1" : "Andorra La Vella",
+			"city2" : "Escaldes",
+			"dist" : 0.016000000000000014
+		}
+	}
+	{
+		"_id" : 6,
+		"value" : {
+			"city1" : "Benguela",
+			"city2" : "Sumbe",
+			"dist" : 1.4439615645854298
+		}
+	}
+	{
+		"_id" : 7,
+		"value" : {
+			"city1" : "",
+			"city2" : "",
+			"dist" : 999999.9999995
+		}
+	}
+	{
+		"_id" : 8,
+		"value" : {
+			"city1" : "Molodesjnaja",
+			"city2" : "McMurdo Station",
+			"dist" : 183.962470629202
+		}
+	}
+	{
+		"_id" : 9,
+		"value" : {
+			"city1" : "Saint Johns",
+			"city2" : "Falmouth",
+			"dist" : 0.12037026210821469
+		}
+	}
+	{
+		"_id" : 10,
+		"value" : {
+			"city1" : "Turdera",
+			"city2" : "Lomas De Zamora",
+			"dist" : 0.015999999999998238
+		}
+	}
+	{
+		"_id" : 11,
+		"value" : {
+			"city1" : "Vanadzor",
+			"city2" : "Spitak",
+			"dist" : 0.2200460179144342
+		}
+	}
+	{
+		"_id" : 12,
+		"value" : {
+			"city1" : "",
+			"city2" : "",
+			"dist" : 999999.9999995
+		}
+	}
+	{
+		"_id" : 14,
+		"value" : {
+			"city1" : "Kalgoorlie",
+			"city2" : "Williamstown",
+			"dist" : 0.016000000000005343
+		}
+	}
+	{
+		"_id" : 15,
+		"value" : {
+			"city1" : "Neudörfl",
+			"city2" : "Wiener Neustadt",
+			"dist" : 0.03712142238654041
+		}
+	}
+	{
+		"_id" : 16,
+		"value" : {
+			"city1" : "",
+			"city2" : "",
+			"dist" : 999999.9999995
+		}
+	}
+	{
+		"_id" : 17,
+		"value" : {
+			"city1" : "Freetown",
+			"city2" : "Old Bight",
+			"dist" : 0.07468600939935845
+		}
+	}
+	{
+		"_id" : 18,
+		"value" : {
+			"city1" : "Al Manamah",
+			"city2" : "Muharraq",
+			"dist" : 0.035805027579939586
+		}
+	}
+	{
+		"_id" : 20,
+		"value" : {
+			"city1" : "Comilla",
+			"city2" : "Dhaka",
+			"dist" : 0.8367855161270389
+		}
+	}
+	{
+		"_id" : 21,
+		"value" : {
+			"city1" : "Christchurch",
+			"city2" : "Warrens",
+			"dist" : 0.024041630560339342
+		}
+	}
+	{
+		"_id" : 23,
+		"value" : {
+			"city1" : "Minsk",
+			"city2" : "Molodechno",
+			"dist" : 0.8294443923494809
+		}
+	}
+
 ### 2. ¿Cómo podríamos obtener la ciudades más distantes en cada país?
+
+Para este paso, solo tendremos que modificar la función **finalice** ya las funciones **emit** y **reduced** se mantienen.  
+
+	var finalize =  function (key, reduced) {
+		if (reduced.data.length == 1) {
+			return { 
+	            "message" : "Este país solo contiene una ciudad" 
+	        };
+		}
+		var max_dist = 0;
+		var city1 = { 
+	        "city": ""
+	    };
+		var city2 = { 
+	        "city": "" 
+	    };
+		var c1;
+		var c2;
+		var d;
+		for (var i in reduced.data) {
+			for (var j in reduced.data) {
+				if (i >= j) {
+	                continue;
+	            }
+				c1 = reduced.data[i];
+				c2 = reduced.data[j];
+				d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+				if (d > max_dist && d > 0) {
+					max_dist = d;
+					city1 = c1;
+					city2 = c2;
+				}
+			}
+		}
+		return {
+	        "city1": city1.city, 
+	        "city2": city2.city, 
+	        "dist": Math.sqrt(min_dist) 
+	    };
+	}
+
+
+Para ejecutarlo haríamos lo siguiente:
+
+
+	db.runCommand({
+		    mapReduce: "cities",
+		    map: mapCode,
+		    reduce: reduceCode,
+		    finalize: finalize,
+		    query: { CountryID: { $ne: 254 } },
+		    out: { merge: "ciudades_lejanas" }
+		});
+	
+	db.ciudades_lejanas.find().pretty();
+
+
+Y tendremos la siguiente salida:
+
+	{
+		"_id" : 1,
+		"value" : {
+			"city1" : "Herat",
+			"city2" : "Kabul",
+			"dist" : 6.98542375235748
+		}
+	}
+	{
+		"_id" : 2,
+		"value" : {
+			"city1" : "Korce",
+			"city2" : "Tirane",
+			"dist" : 1.1860178118392657
+		}
+	}
+	{
+		"_id" : 3,
+		"value" : {
+			"city1" : "Oran",
+			"city2" : "Annaba",
+			"dist" : 8.495467144307016
+		}
+	}
+	{
+		"_id" : 4,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 5,
+		"value" : {
+			"city1" : "Andorra La Vella",
+			"city2" : "Escaldes",
+			"dist" : 0.016000000000000014
+		}
+	}
+	{
+		"_id" : 6,
+		"value" : {
+			"city1" : "Lubango",
+			"city2" : "Luanda",
+			"dist" : 7.976476540428111
+		}
+	}
+	{
+		"_id" : 7,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 8,
+		"value" : {
+			"city1" : "Molodesjnaja",
+			"city2" : "McMurdo Station",
+			"dist" : 183.962470629202
+		}
+	}
+	{
+		"_id" : 9,
+		"value" : {
+			"city1" : "Saint Johns",
+			"city2" : "Falmouth",
+			"dist" : 0.12037026210821469
+		}
+	}
+	{
+		"_id" : 10,
+		"value" : {
+			"city1" : "San Rafael",
+			"city2" : "Ushuaia",
+			"dist" : 30.929864031385584
+		}
+	}
+	{
+		"_id" : 11,
+		"value" : {
+			"city1" : "Gyumri",
+			"city2" : "Yerevan",
+			"dist" : 0.9049468989946328
+		}
+	}
+	{
+		"_id" : 12,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 14,
+		"value" : {
+			"city1" : "Byron Bay",
+			"city2" : "Shark Bay",
+			"dist" : 40.16699782159477
+		}
+	}
+	{
+		"_id" : 15,
+		"value" : {
+			"city1" : "Gänserndorf",
+			"city2" : "Götzis",
+			"dist" : 7.172467427601189
+		}
+	}
+	{
+		"_id" : 16,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 17,
+		"value" : {
+			"city1" : "Matthew Town",
+			"city2" : "Freeport",
+			"dist" : 7.516713244497227
+		}
+	}
+	{
+		"_id" : 18,
+		"value" : {
+			"city1" : "Muharraq",
+			"city2" : "Jasra",
+			"dist" : 0.18866372200293755
+		}
+	}
+	{
+		"_id" : 20,
+		"value" : {
+			"city1" : "Comilla",
+			"city2" : "Saginaw",
+			"dist" : 94.16656784655582
+		}
+	}
+	{
+		"_id" : 21,
+		"value" : {
+			"city1" : "Bridgetown",
+			"city2" : "Speightstown",
+			"dist" : 0.15056227947264958
+		}
+	}
+	{
+		"_id" : 23,
+		"value" : {
+			"city1" : "Brest",
+			"city2" : "Mahilyow",
+			"dist" : 6.8794688748478245
+		}
+	}
+
 ### 3. ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
 ### 4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?.### 5. ¿Cómo podríamos obtener la distancia media entre las ciudades de cada país?.
 ### 6. ¿Mejoraría el rendimiento si creamos un índice? ¿Sobre que campo? Comprobadlo.
