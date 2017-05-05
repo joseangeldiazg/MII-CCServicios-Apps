@@ -1005,9 +1005,9 @@ Tras ejecutarla tendríamos la siguiente salida.
 ## Objetivo 3
 
 Vamos a utilizar la base de datos libre GeoWorldMap de GeoBytes. Es una base de datos de países, con sus estados/regiones y ciudades importantes. Sobre esta Base de datos vamos a obtener el par de ciudades que se encuentran más cercanas en cada país, excluyendo a los EEUU.Vamos a importar en nuestra BD de MongoDB un archivo con 37245 ciudades del mundo que está en formato csv (``/tmp/mongo/Cities.csv``):
-		mongoimport  --db mongobd --collection cities --type csv --headerline --file /home/Cities.csv
 
-Para poder hacer mongoimport, debemos tener el fichero csv en el contendor para ello usamos el comando:
+
+Para poder hacer mongoimport, debemos tener el fichero csv en el contenedor para ello usamos el comando:
 
 	 docker exec -i mongo-p4-jose sh -c 'cat > /home/Cities.csv' < /tmp/mongo/Cities.csv
 	 
@@ -1027,7 +1027,7 @@ Por último importamos la base de datos:
 Una vez hecho esto ya estamos en posición de realizar las siguientes tareas. 
 ### 1. Encontrar las ciudades más cercanas sobre la colección recién creada mediante un enfoque MapReduce conforme a los pasos que se ilustran en el tutorial práctico.
 
-El primer paso será la funcion ``emit()`` esta recibe dos parámetros, la clave, que será el elemento por el que dividiremos o agruparemos y el valor, que podrá ser una estructura que contenga todos los valores que necesitemos para procesar en siguientes puntos.
+El primer paso será la función ``emit()`` esta recibe dos parámetros, la clave, que será el elemento por el que dividiremos o agruparemos y el valor, que podrá ser una estructura que contenga todos los valores que necesitemos para procesar en siguientes puntos.
 
 
 	var mapCode = function() {
@@ -1493,7 +1493,7 @@ Y tendremos la siguiente salida:
 
 ### 3. ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
 
-Lo que ocurre es que solo mantendriamos la primera opción, ya que se evalua la condición para coger las ciudades como < estricto en el caso de las más cercanas o > en el caso de las más lejanas, lo que hará que si aparece otra con el mismo valor no se coja. Podriamos cambiar los signos por >=  o <= pero entonces solo nos quedariamos con la última que cumpliera el requisito, por lo tanto necesitamos crear una estructura y guardarlas. 
+Lo que ocurre es que solo mantendríamos la primera opción, ya que se evalúa la condición para coger las ciudades como < estricto en el caso de las más cercanas o > en el caso de las más lejanas, lo que hará que si aparece otra con el mismo valor no se coja. Podríamos cambiar los signos por >=  o <= pero entonces solo nos quedaríamos con la última que cumpliera el requisito, por lo tanto necesitamos crear una estructura y guardarlas. 
 
 
 	var finalize =  function (key, reduced) {
@@ -1512,6 +1512,7 @@ Lo que ocurre es que solo mantendriamos la primera opción, ya que se evalua la 
     var c1;
     var c2;
     var d;
+    var cities = [];
     for (var i in reduced.data) {
         for (var j in reduced.data) {
             if (i >= j) {
@@ -1535,6 +1536,238 @@ Lo que ocurre es que solo mantendriamos la primera opción, ya que se evalua la 
         "cities": cities,
         "dist": Math.sqrt(min_dist) 
     };
+	}
+
+
+Y ejecutariamos con el mismo comando visto en la consulta 1 de este objetivo. 
+
+	{
+		"_id" : 1,
+		"value" : {
+			"cities" : [
+				[
+					"Kabul",
+					"Mazar-e Sharif"
+				]
+			],
+			"dist" : 3.0173461849777947
+		}
+	}
+	{
+		"_id" : 2,
+		"value" : {
+			"cities" : [
+				[
+					"Korce",
+					"Tirane"
+				]
+			],
+			"dist" : 1.1860178118392657
+		}
+	}
+	{
+		"_id" : 3,
+		"value" : {
+			"cities" : [
+				[
+					"Oran",
+					"Mascara"
+				]
+			],
+			"dist" : 0.8365004482963547
+		}
+	}
+	{
+		"_id" : 4,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 5,
+		"value" : {
+			"cities" : [
+				[
+					"Andorra La Vella",
+					"Escaldes"
+				]
+			],
+			"dist" : 0.016000000000000014
+		}
+	}
+	{
+		"_id" : 6,
+		"value" : {
+			"cities" : [
+				[
+					"Benguela",
+					"Sumbe"
+				]
+			],
+			"dist" : 1.4439615645854298
+		}
+	}
+	{
+		"_id" : 7,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 8,
+		"value" : {
+			"cities" : [
+				[
+					"Molodesjnaja",
+					"McMurdo Station"
+				],
+				[
+					"Reading",
+					"McMurdo Station"
+				]
+			],
+			"dist" : 183.962470629202
+		}
+	}
+	{
+		"_id" : 9,
+		"value" : {
+			"cities" : [
+				[
+					"Saint Johns",
+					"Falmouth"
+				]
+			],
+			"dist" : 0.12037026210821469
+		}
+	}
+	{
+		"_id" : 10,
+		"value" : {
+			"cities" : [
+				[
+					"Turdera",
+					"Lomas De Zamora"
+				]
+			],
+			"dist" : 0.015999999999998238
+		}
+	}
+	{
+		"_id" : 11,
+		"value" : {
+			"cities" : [
+				[
+					"Vanadzor",
+					"Spitak"
+				]
+			],
+			"dist" : 0.2200460179144342
+		}
+	}
+	{
+		"_id" : 12,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 14,
+		"value" : {
+			"cities" : [
+				[
+					"Kalgoorlie",
+					"Williamstown"
+				]
+			],
+			"dist" : 0.016000000000005343
+		}
+	}
+	{
+		"_id" : 15,
+		"value" : {
+			"cities" : [
+				[
+					"Neudörfl",
+					"Wiener Neustadt"
+				]
+			],
+			"dist" : 0.03712142238654041
+		}
+	}
+	{
+		"_id" : 16,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 17,
+		"value" : {
+			"cities" : [
+				[
+					"Freetown",
+					"Old Bight"
+				]
+			],
+			"dist" : 0.07468600939935845
+		}
+	}
+	{
+		"_id" : 18,
+		"value" : {
+			"cities" : [
+				[
+					"Al Manamah",
+					"Muharraq"
+				],
+				[
+					"Manama",
+					"Muharraq"
+				]
+			],
+			"dist" : 0.035805027579939586
+		}
+	}
+	{
+		"_id" : 20,
+		"value" : {
+			"cities" : [
+				[
+					"Comilla",
+					"Dhaka"
+				]
+			],
+			"dist" : 0.8367855161270389
+		}
+	}
+	{
+		"_id" : 21,
+		"value" : {
+			"cities" : [
+				[
+					"Christchurch",
+					"Warrens"
+				]
+			],
+			"dist" : 0.024041630560339342
+		}
+	}
+	{
+		"_id" : 23,
+		"value" : {
+			"cities" : [
+				[
+					"Minsk",
+					"Molodechno"
+				],
+				[
+					"Minsk",
+					"Molodechno"
+				]
+			],
+			"dist" : 0.8294443923494809
+		}
 	}
 
 ### 4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?.
@@ -1569,7 +1802,7 @@ Este punto es sencillo, solo tendríamos que incrementar un contador y devolverl
 					d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
 					if (d > 0) {
 						contador=contador+1;
-						if(){
+						if(d < min_dist){
 							min_dist = d;
 							city1 = c1;
 							city2 = c2;
@@ -1580,10 +1813,181 @@ Este punto es sencillo, solo tendríamos que incrementar un contador y devolverl
 			return {
 		        "city1" : city1.city, 
 		        "city2" : city2.city, 
-		        "evaluations: "contador,
+		        "evaluations": contador,
 		        "dist": Math.sqrt(min_dist)        
 		    };
-		}### 5. ¿Cómo podríamos obtener la distancia media entre las ciudades de cada país?
+		}
+		
+La salida sería:
+
+	{
+		"_id" : 1,
+		"value" : {
+			"city1" : "Kabul",
+			"city2" : "Mazar-e Sharif",
+			"evaluations" : 3,
+			"dist" : 3.0173461849777947
+		}
+	}
+	{
+		"_id" : 2,
+		"value" : {
+			"city1" : "Korce",
+			"city2" : "Tirane",
+			"evaluations" : 1,
+			"dist" : 1.1860178118392657
+		}
+	}
+	{
+		"_id" : 3,
+		"value" : {
+			"city1" : "Oran",
+			"city2" : "Mascara",
+			"evaluations" : 15,
+			"dist" : 0.8365004482963547
+		}
+	}
+	{
+		"_id" : 4,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 5,
+		"value" : {
+			"city1" : "Andorra La Vella",
+			"city2" : "Escaldes",
+			"evaluations" : 1,
+			"dist" : 0.016000000000000014
+		}
+	}
+	{
+		"_id" : 6,
+		"value" : {
+			"city1" : "Benguela",
+			"city2" : "Sumbe",
+			"evaluations" : 10,
+			"dist" : 1.4439615645854298
+		}
+	}
+	{
+		"_id" : 7,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 8,
+		"value" : {
+			"city1" : "Molodesjnaja",
+			"city2" : "McMurdo Station",
+			"evaluations" : 2,
+			"dist" : 183.962470629202
+		}
+	}
+	{
+		"_id" : 9,
+		"value" : {
+			"city1" : "Saint Johns",
+			"city2" : "Falmouth",
+			"evaluations" : 1,
+			"dist" : 0.12037026210821469
+		}
+	}
+	{
+		"_id" : 10,
+		"value" : {
+			"city1" : "Turdera",
+			"city2" : "Lomas De Zamora",
+			"evaluations" : 1431,
+			"dist" : 0.015999999999998238
+		}
+	}
+	{
+		"_id" : 11,
+		"value" : {
+			"city1" : "Vanadzor",
+			"city2" : "Spitak",
+			"evaluations" : 6,
+			"dist" : 0.2200460179144342
+		}
+	}
+	{
+		"_id" : 12,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 14,
+		"value" : {
+			"city1" : "Kalgoorlie",
+			"city2" : "Williamstown",
+			"evaluations" : 26105,
+			"dist" : 0.016000000000005343
+		}
+	}
+	{
+		"_id" : 15,
+		"value" : {
+			"city1" : "Neudörfl",
+			"city2" : "Wiener Neustadt",
+			"evaluations" : 1377,
+			"dist" : 0.03712142238654041
+		}
+	}
+	{
+		"_id" : 16,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 17,
+		"value" : {
+			"city1" : "Freetown",
+			"city2" : "Old Bight",
+			"evaluations" : 170,
+			"dist" : 0.07468600939935845
+		}
+	}
+	{
+		"_id" : 18,
+		"value" : {
+			"city1" : "Al Manamah",
+			"city2" : "Muharraq",
+			"evaluations" : 20,
+			"dist" : 0.035805027579939586
+		}
+	}
+	{
+		"_id" : 20,
+		"value" : {
+			"city1" : "Comilla",
+			"city2" : "Dhaka",
+			"evaluations" : 10,
+			"dist" : 0.8367855161270389
+		}
+	}
+	{
+		"_id" : 21,
+		"value" : {
+			"city1" : "Christchurch",
+			"city2" : "Warrens",
+			"evaluations" : 6,
+			"dist" : 0.024041630560339342
+		}
+	}
+	{
+		"_id" : 23,
+		"value" : {
+			"city1" : "Minsk",
+			"city2" : "Molodechno",
+			"evaluations" : 9,
+			"dist" : 0.8294443923494809
+		}
+	}		### 5. ¿Cómo podríamos obtener la distancia media entre las ciudades de cada país?
 
 Como ya tenemos un contador con el número total de ciudades evaluadas, solo tendríamos que acumular todas las distancias de las ciudades que se comparen y a la hora de devolverlas haremos el total entre el número de ciudades. 
 
@@ -1617,7 +2021,7 @@ Como ya tenemos un contador con el número total de ciudades evaluadas, solo ten
 					if (d > 0) {
 						contador=contador+1;
 						distancia_total=distancia_total+d;
-						if(){
+						if(d < min_dist){
 							min_dist = d;
 							city1 = c1;
 							city2 = c2;
@@ -1632,5 +2036,176 @@ Como ya tenemos un contador con el número total de ciudades evaluadas, solo ten
 		        "dist": Math.sqrt(min_dist)        
 		    };
 		}
+
+La salida sería:
+
+	{
+		"_id" : 1,
+		"value" : {
+			"city1" : "Kabul",
+			"city2" : "Mazar-e Sharif",
+			"Distancia Media" : 5.148174719390839,
+			"dist" : 3.0173461849777947
+		}
+	}
+	{
+		"_id" : 2,
+		"value" : {
+			"city1" : "Korce",
+			"city2" : "Tirane",
+			"Distancia Media" : 1.1860178118392657,
+			"dist" : 1.1860178118392657
+		}
+	}
+	{
+		"_id" : 3,
+		"value" : {
+			"city1" : "Oran",
+			"city2" : "Mascara",
+			"Distancia Media" : 4.592117250388198,
+			"dist" : 0.8365004482963547
+		}
+	}
+	{
+		"_id" : 4,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 5,
+		"value" : {
+			"city1" : "Andorra La Vella",
+			"city2" : "Escaldes",
+			"Distancia Media" : 0.016000000000000014,
+			"dist" : 0.016000000000000014
+		}
+	}
+	{
+		"_id" : 6,
+		"value" : {
+			"city1" : "Benguela",
+			"city2" : "Sumbe",
+			"Distancia Media" : 4.011856586626525,
+			"dist" : 1.4439615645854298
+		}
+	}
+	{
+		"_id" : 7,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 8,
+		"value" : {
+			"city1" : "Molodesjnaja",
+			"city2" : "McMurdo Station",
+			"Distancia Media" : 183.962470629202,
+			"dist" : 183.962470629202
+		}
+	}
+	{
+		"_id" : 9,
+		"value" : {
+			"city1" : "Saint Johns",
+			"city2" : "Falmouth",
+			"Distancia Media" : 0.12037026210821469,
+			"dist" : 0.12037026210821469
+		}
+	}
+	{
+		"_id" : 10,
+		"value" : {
+			"city1" : "Turdera",
+			"city2" : "Lomas De Zamora",
+			"Distancia Media" : 7.516723478942258,
+			"dist" : 0.015999999999998238
+		}
+	}
+	{
+		"_id" : 11,
+		"value" : {
+			"city1" : "Vanadzor",
+			"city2" : "Spitak",
+			"Distancia Media" : 0.5826373265925909,
+			"dist" : 0.2200460179144342
+		}
+	}
+	{
+		"_id" : 12,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 14,
+		"value" : {
+			"city1" : "Kalgoorlie",
+			"city2" : "Williamstown",
+			"Distancia Media" : 13.523198216104323,
+			"dist" : 0.016000000000005343
+		}
+	}
+	{
+		"_id" : 15,
+		"value" : {
+			"city1" : "Neudörfl",
+			"city2" : "Wiener Neustadt",
+			"Distancia Media" : 2.48556192868551,
+			"dist" : 0.03712142238654041
+		}
+	}
+	{
+		"_id" : 16,
+		"value" : {
+			"message" : "Este país solo contiene una ciudad"
+		}
+	}
+	{
+		"_id" : 17,
+		"value" : {
+			"city1" : "Freetown",
+			"city2" : "Old Bight",
+			"Distancia Media" : 2.8268589972830935,
+			"dist" : 0.07468600939935845
+		}
+	}
+	{
+		"_id" : 18,
+		"value" : {
+			"city1" : "Al Manamah",
+			"city2" : "Muharraq",
+			"Distancia Media" : 0.10929194178280277,
+			"dist" : 0.035805027579939586
+		}
+	}
+	{
+		"_id" : 20,
+		"value" : {
+			"city1" : "Comilla",
+			"city2" : "Dhaka",
+			"Distancia Media" : 38.22592916882991,
+			"dist" : 0.8367855161270389
+		}
+	}
+	{
+		"_id" : 21,
+		"value" : {
+			"city1" : "Christchurch",
+			"city2" : "Warrens",
+			"Distancia Media" : 0.08047164379109523,
+			"dist" : 0.024041630560339342
+		}
+	}
+	{
+		"_id" : 23,
+		"value" : {
+			"city1" : "Minsk",
+			"city2" : "Molodechno",
+			"Distancia Media" : 3.3298240952743003,
+			"dist" : 0.8294443923494809
+		}
+	}
 
 ### 6. ¿Mejoraría el rendimiento si creamos un índice? ¿Sobre que campo? Comprobadlo.
