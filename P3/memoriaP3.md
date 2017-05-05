@@ -2209,3 +2209,17 @@ La salida sería:
 	}
 
 ### 6. ¿Mejoraría el rendimiento si creamos un índice? ¿Sobre que campo? Comprobadlo.
+
+
+El campo apropiado para crear un indice son aquellos por los que se va a recorrer o buscar recurrentemente, podríamos montar un indice sobre CountryID que es un identificador único para cada país, pero esto no mejoraría, ya que mongo directamente monta un indice por el _id de cada elemento, por lo que esta acción implicaría mantener dos indices que realmente se usarian para lo mismo por lo que no es útil. Por otro lado, los indices en problemas con MapReduce pueden ser contraproducentes ya que al dividir el problema en pequeñas partes y recombinar puede conllevar problemas de gestión de la estructura del indice. 
+
+Para probarlo podemos usar:
+
+	db.cities.ensureIndex({CountryID: 1});
+
+Tras lo cual ejecutamos el problema como hemos venido haciendo en puntos anteriores. 
+
+
+## Conclusiones
+
+MongoDB es una herramienta muy útil y sencilla de utilizar. Pese a no haber tenido contacto con la herramienta antes, en unos pocos minutos de aprendizaje puedes estar formulando consultas complejas. Por otro lado, la potencia frente a SQL cuando trabajamos con cantidades de datos muy grandes es notable. 
