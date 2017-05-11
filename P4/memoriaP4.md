@@ -103,4 +103,62 @@ En este caso debemos realizar los siguientes cambios en la función Reducer.
 Tras lo cual si compilamos y ejecutamos obtendremos el siguiente resultado, que combina los estadísticos de las anteriores secciones. 
 
 	Minimo:	-11.0
-	Maximo:	9.0	### 4. Calcula los valores máximo y mínimo de todas las variables (salvo la última, que es la etiqueta de clase)### 5. Realizar la media de la variable 5### 6. Obtener la media de todas las variables (salvo la clase)### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
+	Maximo:	9.0	### 4. Calcula los valores máximo y mínimo de todas las variables (salvo la última, que es la etiqueta de clase)En este caso si que es necesario modificar la función mapper, además de la reduce, donde deberemos introducir para que el resultado sea más fácilmente entendible la variable a la que representa cada salida. La función Mapper sería la siguiente:
+
+	public class MinMaxAllMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {
+        private static final int MISSING = 9999;
+
+		public void map(LongWritable key, Text value, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException
+    	{
+	        String line = value.toString();
+	        String[] parts = line.split(",");
+	    		int variables=parts.length-1;
+	    		for(int i=0; i<variables;i++)
+	        	{
+	            	output.collect(new Text(String.valueOf(i)), new DoubleWritable(Double.parseDouble(parts[i])));
+	    		}
+	    }
+	}
+	
+Mientras que la función Reduce sería:
+
+	
+	public class MinMaxAllReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+
+
+	public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+		Double maxValue = Double.MIN_VALUE;
+		Double minValue = Double.MAX_VALUE;
+		while (values.hasNext()) {
+			Double indice = values.next().get();
+			maxValue= Math.max(maxValue,indice);
+			minValue= Math.min(minValue,indice);
+		}
+		output.collect(new Text("Minimo de la variable "+key+":"), new DoubleWritable(minValue));
+		output.collect(new Text("Maximo de la variable "+key+":"), new DoubleWritable(maxValue));
+	}
+	}
+
+Tras lo cual podremos ver la siguiente salida:
+
+	Minimo de la variable 1:	0.0
+	Maximo de la variable 1:	0.154
+	Minimo de la variable 2:	-12.0
+	Maximo de la variable 2:	10.0
+	Minimo de la variable 3:	-11.0
+	Maximo de la variable 3:	8.0
+	Minimo de la variable 4:	-12.0
+	Maximo de la variable 4:	9.0
+	Minimo de la variable 5:	-11.0
+	Maximo de la variable 5:	9.0
+	Minimo de la variable 6:	-13.0
+	Maximo de la variable 6:	9.0
+	Minimo de la variable 7:	-12.0
+	Maximo de la variable 7:	9.0
+	Minimo de la variable 8:	-12.0
+	Maximo de la variable 8:	7.0
+	Minimo de la variable 9:	-13.0
+	Maximo de la variable 9:	10.0
+	Minimo de la variable 0:	0.094
+	Maximo de la variable 0:	0.768
+### 5. Realizar la media de la variable 5### 6. Obtener la media de todas las variables (salvo la clase)### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
