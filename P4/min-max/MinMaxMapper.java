@@ -9,7 +9,7 @@ import org.apache.hadoop.mapred.Mapper;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
-public class MaxMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class MinMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {
         private static final int MISSING = 9999;
         public static int col=5;
 
@@ -17,6 +17,6 @@ public class MaxMapper extends MapReduceBase implements Mapper<LongWritable, Tex
 porter reporter) throws IOException {
                 String line = value.toString();
                 String[] parts = line.split(",");
-                output.collect(new Text("1"), new DoubleWritable(Double.parseDouble(parts[col])));
+                output.collect(new Text("3:"), new DoubleWritable(Double.parseDouble(parts[col])));
         }
 }

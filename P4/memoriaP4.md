@@ -79,4 +79,28 @@ Tras lo cual tendremos como resultado:
 
 	1	9.0	
 
- ### 3. Calcula al mismo tiempo los valores máximo y mínimo de la variable 5### 4. Calcula los valores máximo y mínimo de todas las variables (salvo la última, que es la etiqueta de clase)### 5. Realizar la media de la variable 5### 6. Obtener la media de todas las variables (salvo la clase)### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
+ ### 3. Calcula al mismo tiempo los valores máximo y mínimo de la variable 5
+
+En este caso debemos realizar los siguientes cambios en la función Reducer. 
+
+
+	public class MinMaxReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+	
+
+		public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+			Double maxValue = Double.MIN_VALUE;
+			Double minValue = Double.MAX_VALUE;
+			while (values.hasNext()) {
+				Double indice = values.next().get();
+				maxValue= Math.max(maxValue,indice);
+				minValue= Math.min(minValue,indice);
+			}
+		output.collect(new Text("Minimo:"), new DoubleWritable(minValue));
+		output.collect(new Text("Maximo:"), new DoubleWritable(maxValue));
+		}
+	}
+
+Tras lo cual si compilamos y ejecutamos obtendremos el siguiente resultado, que combina los estadísticos de las anteriores secciones. 
+
+	Minimo:	-11.0
+	Maximo:	9.0	### 4. Calcula los valores máximo y mínimo de todas las variables (salvo la última, que es la etiqueta de clase)### 5. Realizar la media de la variable 5### 6. Obtener la media de todas las variables (salvo la clase)### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
