@@ -224,9 +224,6 @@ Por otro lado, el dódigo de la función reducer sería:
 	}
 
 
-
-
-
 La salida es:
 
 	Media de la variable1:	0.052127765909443624
@@ -240,4 +237,50 @@ La salida es:
 	Media de la variable9:	-1.6989002790625127
 	Media de la variable0:	0.2549619599174071
 
-### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
+3.136.000/64000
+### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.
+
+Para saber si estamos haciendo bien este calculo primero haremos una sencilla prueba matemática para tener una estimación del valor que el ratio de balanceo deberá tener: Estamos trabajando con el dataset ECBDL, que se compone de un total de 32.000.000 de instancias. Para nuestra práctica nos quedamos con el 10% es decir, finalmente trabajamos con 3.200.000 instancias, de las cuales, sabemos por las especificaciones del dataset que el 98% corresponden a clase negativa (ya sabemos que será no balanceado, pero vamos a comprobarlo) por lo que tenemos sobre 3.136.000 de una clase y 64.000 de la otra, si hacemos el cálculo del ratio obtenemos un ratio de **49**. Vamos a ver si nuestro cálculo se parece:
+
+La función mapper, se mantiene igual que en las del mínimo o máximo pero pasando la columna 10 que es la que contiene nuestra clase. Por otro lado, la funcion Reducer será:
+
+	public class MinReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+		
+	
+		public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+			int class0=0;
+			int class1=1;
+			double valActual;
+			double ratio=0.0;
+			while (values.hasNext()) {
+				valActual= values.next().get();
+				if(valActual==0){
+					class0+=1;
+				}
+				else if(valActual==1){
+					class1+=1;
+				}
+			}
+			
+			if(class1>class0){
+				ratio=class1/class0;
+			}
+			else if(class0>class1){
+				ratio=class0/class1;
+			}
+			if(ratio>1.5 || class0==class1){
+				output.collect(new Text("Conjunto no balanceado. Ratio:"), new DoubleWritable(ratio));
+			}
+			else if(ratio<=1.5){
+				output.collect(new Text("Conjunto balanceado. Ratio:"), new DoubleWritable(ratio));	
+			}
+	
+		}
+	}
+
+
+Tras su compilado y ejecución obtenemos:
+
+	Conjunto no balanceado. Ratio:	58.0
+	
+Que como podemos comprobar está dentro del rango del cálculo hecho antes. 	### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
