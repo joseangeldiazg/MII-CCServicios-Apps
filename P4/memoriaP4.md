@@ -161,4 +161,40 @@ Tras lo cual podremos ver la siguiente salida:
 	Maximo de la variable 9:	10.0
 	Minimo de la variable 0:	0.094
 	Maximo de la variable 0:	0.768
-### 5. Realizar la media de la variable 5### 6. Obtener la media de todas las variables (salvo la clase)### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
+### 5. Realizar la media de la variable 5Para este punto, podemos usar el mismo mapper usado para el mínimo o el máximo y tendremos que modificar por tanto el proceso reduce. 
+
+	package oldapi;
+	import java.io.IOException;
+	import java.util.Iterator;
+	import org.apache.hadoop.io.IntWritable;
+	import org.apache.hadoop.io.DoubleWritable;
+	import org.apache.hadoop.io.Text;
+	import org.apache.hadoop.mapred.MapReduceBase;
+	import org.apache.hadoop.mapred.OutputCollector;
+	import org.apache.hadoop.mapred.Reducer;
+	import org.apache.hadoop.mapred.Reporter;
+	public class MinReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+		
+	
+		public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+			Double avg =0.0;
+			Double total=0.0;
+			int cuenta=0;
+			while (values.hasNext()) {
+				total+= values.next().get();
+				cuenta+=1;
+			}
+	
+			avg=total/cuenta;
+		output.collect(new Text("Media:"), new DoubleWritable(avg));	}
+	}
+
+
+La salida que obtenemos es la siguiente:
+
+	Media:	-1.282261707288373
+		### 6. Obtener la media de todas las variables (salvo la clase)
+
+Para este punto, al igual que en el objetivo 4, tenemos que obtener un reducer que itere sobre todas las variables exceptuando la clase el código es:
+
+### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
