@@ -15,7 +15,7 @@ public class Max {
 			System.err.println("Usage: MaxTemperature <input path> <output path>");
 			System.exit(-1);
 		}
-		JobConf conf = new JobConf(Min.class);
+		JobConf conf = new JobConf(Max.class);
 		conf.setJobName("Max temperature");
 		FileInputFormat.addInputPath(conf, new Path(args[0]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));

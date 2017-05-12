@@ -284,3 +284,73 @@ Tras su compilado y ejecución obtenemos:
 	Conjunto no balanceado. Ratio:	58.0
 	
 Que como podemos comprobar está dentro del rango del cálculo hecho antes. 	### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
+
+
+
+## Opcionales
+
+En el tutorial de Hadoop se propone la realización de algunos otros objetivos, en este primer punto realizaremos tres de ellos al mismo tiempo:
+
+Unir todos los estadísticos en un mismo código, hacerlo sobre todas las variables y etiquetar los experimentos. La función Mapper es la misma que hemos usado en las anteriores ocasiones que queriamos calcular algo sobre todas las muestras. Por otro lado, la función Reduce si que tiene cambios:
+
+public class StatAllReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+
+
+	public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+				Double maxValue = Double.MIN_VALUE;
+				Double minValue = Double.MAX_VALUE;
+				Double avg =0.0;
+				Double total=0.0;
+				int cuenta=0;
+
+				while (values.hasNext()) {
+						Double indice = values.next().get();
+						maxValue= Math.max(maxValue,indice);
+						minValue= Math.min(minValue,indice);
+						total+= indice;
+						cuenta+=1;
+				}
+				avg=total/cuenta;
+
+			output.collect(new Text("Media de la variable "+key+":"), new DoubleWritable(avg));
+			output.collect(new Text("Minimo de la variable "+key+":"), new DoubleWritable(minValue));
+			output.collect(new Text("Maximo de la variable "+key+":"), new DoubleWritable(maxValue));
+		}
+	}
+
+
+La salida sería:
+
+	Media de la variable 1:	0.052127765909225854
+	Minimo de la variable 1:	0.0
+	Maximo de la variable 1:	0.154
+	Media de la variable 2:	-2.188240380935686
+	Minimo de la variable 2:	-12.0
+	Maximo de la variable 2:	10.0
+	Media de la variable 3:	-1.408876789776933
+	Minimo de la variable 3:	-11.0
+	Maximo de la variable 3:	8.0
+	Media de la variable 4:	-1.7528724942777865
+	Minimo de la variable 4:	-12.0
+	Maximo de la variable 4:	9.0
+	Media de la variable 5:	-1.282261707288373
+	Minimo de la variable 5:	-11.0
+	Maximo de la variable 5:	9.0
+	Media de la variable 6:	-2.293434905140485
+	Minimo de la variable 6:	-13.0
+	Maximo de la variable 6:	9.0
+	Media de la variable 7:	-1.5875789403216172
+	Minimo de la variable 7:	-12.0
+	Maximo de la variable 7:	9.0
+	Media de la variable 8:	-1.7390052924221087
+	Minimo de la variable 8:	-12.0
+	Maximo de la variable 8:	7.0
+	Media de la variable 9:	-1.6989002790625127
+	Minimo de la variable 9:	-13.0
+	Maximo de la variable 9:	10.0
+	Media de la variable 0:	0.2549619599168005
+	Minimo de la variable 0:	0.094
+	Maximo de la variable 0:	0.768
+
+
+

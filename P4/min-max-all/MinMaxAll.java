@@ -15,7 +15,7 @@ public class MinMaxAll {
 			System.err.println("Usage: MinMaxAllTemperature <input path> <output path>");
 			System.exit(-1);
 		}
-		JobConf conf = new JobConf(Min.class);
+		JobConf conf = new JobConf(MinMaxAll.class);
 		conf.setJobName("MinMax temperature of all variables:");
 		FileInputFormat.addInputPath(conf, new Path(args[0]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));

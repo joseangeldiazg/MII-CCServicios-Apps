@@ -15,7 +15,7 @@ public class Ratio {
 			System.err.println("Usage: Ratio <input path> <output path>");
 			System.exit(-1);
 		}
-		JobConf conf = new JobConf(Min.class);
+		JobConf conf = new JobConf(Ratio.class);
 		conf.setJobName("Ratio");
 		FileInputFormat.addInputPath(conf, new Path(args[0]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));
