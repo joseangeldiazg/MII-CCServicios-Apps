@@ -163,16 +163,7 @@ Tras lo cual podremos ver la siguiente salida:
 	Maximo de la variable 0:	0.768
 ### 5. Realizar la media de la variable 5Para este punto, podemos usar el mismo mapper usado para el mínimo o el máximo y tendremos que modificar por tanto el proceso reduce. 
 
-	package oldapi;
-	import java.io.IOException;
-	import java.util.Iterator;
-	import org.apache.hadoop.io.IntWritable;
-	import org.apache.hadoop.io.DoubleWritable;
-	import org.apache.hadoop.io.Text;
-	import org.apache.hadoop.mapred.MapReduceBase;
-	import org.apache.hadoop.mapred.OutputCollector;
-	import org.apache.hadoop.mapred.Reducer;
-	import org.apache.hadoop.mapred.Reporter;
+
 	public class MinReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 		
 	
@@ -196,5 +187,57 @@ La salida que obtenemos es la siguiente:
 		### 6. Obtener la media de todas las variables (salvo la clase)
 
 Para este punto, al igual que en el objetivo 4, tenemos que obtener un reducer que itere sobre todas las variables exceptuando la clase el código es:
+
+
+	public class MinMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {
+	        private static final int MISSING = 9999;
+	
+			public void map(LongWritable key, Text value, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+	                String line = value.toString();
+	                String[] parts = line.split(",");
+			int variables=parts.length-1;
+			for(int i=0; i<variables; i++){
+				output.collect(new Text(String.valueOf(i)), new DoubleWritable(Double.parseDouble(parts[i])));
+			}
+			}
+        }
+
+
+
+
+Por otro lado, el dódigo de la función reducer sería:
+
+	public class MinReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+		
+	
+		public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+			Double avg =0.0;
+			Double total=0.0;
+			int cuenta=0;
+			while (values.hasNext()) {
+				total+= values.next().get();
+				cuenta+=1;
+			}
+	
+			avg=total/cuenta;
+		output.collect(new Text("Media de la variable"+key+":"), new DoubleWritable(avg));	}
+	}
+
+
+
+
+
+La salida es:
+
+	Media de la variable1:	0.052127765909443624
+	Media de la variable2:	-2.188240380935686
+	Media de la variable3:	-1.408876789776933
+	Media de la variable4:	-1.7528724942777865
+	Media de la variable5:	-1.282261707288373
+	Media de la variable6:	-2.293434905140485
+	Media de la variable7:	-1.5875789403216172
+	Media de la variable8:	-1.7390052924221087
+	Media de la variable9:	-1.6989002790625127
+	Media de la variable0:	0.2549619599174071
 
 ### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
