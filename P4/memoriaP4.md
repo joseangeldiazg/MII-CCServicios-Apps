@@ -38,7 +38,7 @@ Por otro lado la función reduce sería como sigue:
 			output.collect(key, new DoubleWritable(minValue));
 			}
 	}	
-Tras lo cual compilariamos y ejecutariamos con las siguientes ordenes:
+Tras lo cual compilaríamos y ejecutaríamos con las siguientes ordenes:
 	
 	javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* -d java_classes Min*
 	
@@ -186,7 +186,7 @@ La salida que obtenemos es la siguiente:
 	Media:	-1.282261707288373
 		### 6. Obtener la media de todas las variables (salvo la clase)
 
-Para este punto, al igual que en el objetivo 4, tenemos que obtener un reducer que itere sobre todas las variables exceptuando la clase el código es:
+Para este punto, al igual que en el objetivo 4, tenemos que obtener un reducer que itere sobre todas las variables exceptuando la clase. El código es:
 
 
 	public class MinMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {
@@ -236,13 +236,11 @@ La salida es:
 	Media de la variable8:	-1.7390052924221087
 	Media de la variable9:	-1.6989002790625127
 	Media de la variable0:	0.2549619599174071
-
-3.136.000/64000
 ### 7. Comprobar si el conjunto de datos ECBDL es balanceado o no balanceado, es decir, que el ratio entre las clases sea menor o mayor que 1.5 respectivamente.
 
 Para saber si estamos haciendo bien este calculo primero haremos una sencilla prueba matemática para tener una estimación del valor que el ratio de balanceo deberá tener: Estamos trabajando con el dataset ECBDL, que se compone de un total de 32.000.000 de instancias. Para nuestra práctica nos quedamos con el 10% es decir, finalmente trabajamos con 3.200.000 instancias, de las cuales, sabemos por las especificaciones del dataset que el 98% corresponden a clase negativa (ya sabemos que será no balanceado, pero vamos a comprobarlo) por lo que tenemos sobre 3.136.000 de una clase y 64.000 de la otra, si hacemos el cálculo del ratio obtenemos un ratio de **49**. Vamos a ver si nuestro cálculo se parece:
 
-La función mapper, se mantiene igual que en las del mínimo o máximo pero pasando la columna 10 que es la que contiene nuestra clase. Por otro lado, la funcion Reducer será:
+La función mapper, se mantiene igual que en las del mínimo o máximo pero pasando la columna 10 que es la que contiene nuestra clase. Por otro lado, la función Reducer será:
 
 	public class MinReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 		
