@@ -284,6 +284,205 @@ Tras su compilado y ejecución obtenemos:
 Que como podemos comprobar está dentro del rango del cálculo hecho antes. 	### 8. Cálculo del coeficiente de correlación entre todas las parejas de variables
 
 
+En este caso es necesario modificar todas las funciones, incluidos el mail y el mapper. En la función mapper deberemos mandar en el argumento values, los cálculos por filas de los parámetros que necesitaremos para calcular el acumulado en el reducer. Como esto es un cambio de los parámetros deberemos modificar también el main.
+
+Las funciones serían por tanto las siguientes:
+
+	public class Correlation {
+		public static void main(String[] args) throws IOException {
+			if (args.length != 2) {
+				System.err.println("Usage: Correlation <input path> <output path>");
+				System.exit(-1);
+			}
+			JobConf conf = new JobConf(Correlation.class);
+			conf.setJobName("Correlation");
+			FileInputFormat.addInputPath(conf, new Path(args[0]));
+			FileOutputFormat.setOutputPath(conf, new Path(args[1]));
+			conf.setMapperClass(CorrelationMapper.class);
+			conf.setReducerClass(CorrelationReducer.class);
+			conf.setMapOutputKeyClass(Text.class);
+			conf.setMapOutputValueClass(Text.class);
+			conf.setOutputKeyClass(Text.class);
+			conf.setOutputValueClass(DoubleWritable.class);
+			JobClient.runJob(conf);
+		}
+	} 
+	
+Mapper:
+
+	public class CorrelationMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+	        private static final int MISSING = 9999;
+	
+			public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+	                String line = value.toString();
+	                String[] parts = line.split(",");
+	                double xy=0, xx=0, yy=0;
+	                String str_xy, str_xx, str_yy;
+	
+	                int variables = parts.length-1;
+	                for(int i=0; i<variables; i++)
+	                {
+	                    for(int j=0; j<variables; j++)
+	                    {
+	                          xy=Double.parseDouble(parts[i])*Double.parseDouble(parts[j]);
+	                          xx=Double.parseDouble(parts[i])*Double.parseDouble(parts[i]);
+	                          yy=Double.parseDouble(parts[j])*Double.parseDouble(parts[j]);
+	
+	                          str_xy=Double.toString(xy);
+	                          str_xx=Double.toString(xx);
+	                          str_yy=Double.toString(yy);
+	
+	                          output.collect(new Text(Integer.toString(i)+","+Integer.toString(j)),
+	                              new Text(parts[i]+"," + parts[j]+","+str_xy+","+str_xx+","+str_yy));
+	                    }
+	
+	                }
+	
+	        }
+	}
+	
+Reducer:
+
+	public class CorrelationReducer extends MapReduceBase implements Reducer<Text, Text, Text, DoubleWritable>
+		{
+				public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+	
+							double sumX = 0, sumY = 0, sumXX = 0, sumYY = 0, sumXY = 0, tam = 0;
+							double medX=0, medY=0, covarianza=0, desX=0, desY=0, correlation=0;
+	
+							while (values.hasNext())
+							{
+									String line = values.next().toString();
+									String[] parts = line.split(",");
+									double x = Double.parseDouble(parts[0]);
+									double y = Double.parseDouble(parts[1]);
+									double xy = Double.parseDouble(parts[2]);
+									double xx = Double.parseDouble(parts[3]);
+									double yy = Double.parseDouble(parts[4]);
+	
+									sumX+=x;
+									sumY+=y;
+									sumXX+=xx;
+									sumXY+=xy;
+									sumYY+=yy;
+									tam++;
+							}
+	
+							medX=sumX/tam;
+							medY=sumY/tam;
+							covarianza=sumXY/tam;
+							desX=Math.sqrt((sumXX/tam)-(medX*medX));
+							desY=Math.sqrt((sumYY/tam)-(medY*medY));
+							correlation=covarianza/(desX*desY);
+	
+							output.collect(new Text("Correlacion de las variables "+key+":"), new DoubleWritable(correlation));
+				}
+		}	
+	
+	
+La salida que ofrece es la que podemos ver a continuación:
+
+	Correlacion de las variables 4,9:	0.28951401227448026
+	Correlacion de las variables 5,8:	0.2932577563538439
+	Correlacion de las variables 6,7:	0.48464624276968454
+	Correlacion de las variables 7,6:	0.48464624276968454
+	Correlacion de las variables 8,5:	0.2932577563538439
+	Correlacion de las variables 9,4:	0.28951401227448026
+	Correlacion de las variables 5,9:	0.26732880414476834
+	Correlacion de las variables 6,8:	0.4723708923477761
+	Correlacion de las variables 7,7:	1.2904528448343608
+	Correlacion de las variables 8,6:	0.4723708923477761
+	Correlacion de las variables 9,5:	0.26732880414476834
+	Correlacion de las variables 6,9:	0.45369677663566166
+	Correlacion de las variables 7,8:	-0.01930115553186774
+	Correlacion de las variables 8,7:	-0.01930115553186774
+	Correlacion de las variables 9,6:	0.45369677663566166
+	Correlacion de las variables 0,0:	9.238504786717295
+	Correlacion de las variables 7,9:	0.3615923952107711
+	Correlacion de las variables 8,8:	1.3306850594790478
+	Correlacion de las variables 9,7:	0.3615923952107711
+	Correlacion de las variables 0,1:	6.757986765100972
+	Correlacion de las variables 1,0:	6.757986765435912
+	Correlacion de las variables 8,9:	0.3989695582660335
+	Correlacion de las variables 9,8:	0.3989695582660335
+	Correlacion de las variables 0,2:	-1.8863381648198956
+	Correlacion de las variables 1,1:	6.768724360523812
+	Correlacion de las variables 2,0:	-1.8863381647731121
+	Correlacion de las variables 9,9:	1.2551517912496273
+	Correlacion de las variables 0,3:	-1.3047631102867614
+	Correlacion de las variables 1,2:	-1.6580150419400022
+	Correlacion de las variables 2,1:	-1.6580150419150723
+	Correlacion de las variables 3,0:	-1.304763110362681
+	Correlacion de las variables 0,4:	-1.5178888907944856
+	Correlacion de las variables 1,3:	-1.1409972267449517
+	Correlacion de las variables 2,2:	1.4747937247540117
+	Correlacion de las variables 3,1:	-1.14099722681717
+	Correlacion de las variables 4,0:	-1.5178888908935797
+	Correlacion de las variables 0,5:	-1.25879753673482
+	Correlacion de las variables 1,4:	-1.2509834324604725
+	Correlacion de las variables 2,3:	0.31278384494556577
+	Correlacion de las variables 3,2:	0.31278384494556577
+	Correlacion de las variables 4,1:	-1.2509834325646993
+	Correlacion de las variables 5,0:	-1.2587975367855877
+	Correlacion de las variables 0,6:	-1.7767399242727606
+	Correlacion de las variables 1,5:	-1.1467716981429337
+	Correlacion de las variables 2,4:	0.393968857992932
+	Correlacion de las variables 3,3:	1.2294271544525375
+	Correlacion de las variables 4,2:	0.393968857992932
+	Correlacion de las variables 5,1:	-1.1467716981087366
+	Correlacion de las variables 6,0:	-1.776739924175114
+	Correlacion de las variables 0,7:	-1.3676865400541747
+	Correlacion de las variables 1,6:	-1.6796909115550054
+	Correlacion de las variables 2,5:	0.357383969603115
+	Correlacion de las variables 3,4:	0.2769710009725587
+	Correlacion de las variables 4,3:	0.2769710009725587
+	Correlacion de las variables 5,2:	0.357383969603115
+	Correlacion de las variables 6,1:	-1.6796909116013496
+	Correlacion de las variables 7,0:	-1.3676865402765044
+	Correlacion de las variables 0,8:	-1.5843150448137409
+	Correlacion de las variables 1,7:	-1.2944449453209963
+	Correlacion de las variables 2,6:	0.513904856696898
+	Correlacion de las variables 3,5:	0.2477489967604067
+	Correlacion de las variables 4,4:	1.2974108434137177
+	Correlacion de las variables 5,3:	0.2477489967604067
+	Correlacion de las variables 6,2:	0.513904856696898
+	Correlacion de las variables 7,1:	-1.294444945321578
+	Correlacion de las variables 8,0:	-1.5843150447403864
+	Correlacion de las variables 0,9:	-1.3115805595185028
+	Correlacion de las variables 1,8:	-1.3652760375655453
+	Correlacion de las variables 2,7:	0.4094987082957938
+	Correlacion de las variables 3,6:	0.35457836229160017
+	Correlacion de las variables 4,5:	0.33496418195706285
+	Correlacion de las variables 5,4:	0.33496418195706285
+	Correlacion de las variables 6,3:	0.35457836229160017
+	Correlacion de las variables 7,2:	0.4094987082957938
+	Correlacion de las variables 8,1:	-1.365276037533275
+	Correlacion de las variables 9,0:	-1.3115805596087982
+	Correlacion de las variables 1,9:	-1.2299496284057423
+	Correlacion de las variables 2,8:	0.4213187142937814
+	Correlacion de las variables 3,7:	0.2769341534764189
+	Correlacion de las variables 4,6:	0.3924252714850838
+	Correlacion de las variables 5,5:	1.2338339385198749
+	Correlacion de las variables 6,4:	0.3924252714850838
+	Correlacion de las variables 7,3:	0.2769341534764189
+	Correlacion de las variables 8,2:	0.4213187142937814
+	Correlacion de las variables 9,1:	-1.229949628409885
+	Correlacion de las variables 2,9:	0.3756074111413685
+	Correlacion de las variables 3,8:	0.29157210664348937
+	Correlacion de las variables 4,7:	0.3137541703353481
+	Correlacion de las variables 5,6:	0.3637685726837432
+	Correlacion de las variables 6,5:	0.3637685726837432
+	Correlacion de las variables 7,4:	0.3137541703353481
+	Correlacion de las variables 8,3:	0.29157210664348937
+	Correlacion de las variables 9,2:	0.3756074111413685
+	Correlacion de las variables 3,9:	0.2601190627210383
+	Correlacion de las variables 4,8:	0.3258527992060872
+	Correlacion de las variables 5,7:	0.2935902957339941
+	Correlacion de las variables 6,6:	1.4707170942525576
+	Correlacion de las variables 7,5:	0.2935902957339941
+	Correlacion de las variables 8,4:	0.3258527992060872
+	Correlacion de las variables 9,3:	0.2601190627210383
+	
 
 ## Opcionales
 
@@ -291,7 +490,7 @@ En el tutorial de Hadoop se propone la realización de algunos otros objetivos, 
 
 Unir todos los estadísticos en un mismo código, hacerlo sobre todas las variables y etiquetar los experimentos. La función Mapper es la misma que hemos usado en las anteriores ocasiones que queriamos calcular algo sobre todas las muestras. Por otro lado, la función Reduce si que tiene cambios:
 
-public class StatAllReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+	public class StatAllReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 
 
 	public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
