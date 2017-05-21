@@ -7,7 +7,7 @@ Computación Distribuida y Escalable con Hadoop
 El objetivo de esta práctica es realizar programas escalables para mejorar la eficiencia en entornos Big Data. Para ello, haremos uso del entorno que se ha convertido en un estándar de facto como es Hadoop, utilizando **HDFS** como sistema de archivos distribuido y **Hadoop- MapReduce** como mecanismo de ejecución.
 
 
-Una vez realizado los primeros pasos para compilar nuestro código en java correspondiente, y tener localizado los datos con los que vamos a trabajar, concretamente ``tmp/tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data`` estamos en posición de comenzar a realizar los siguientes ejercicios con Hadoop. 
+Una vez realizado los primeros pasos para compilar nuestro código en java correspondiente, y tener localizado los datos con los que vamos a trabajar, concretamente ``/tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data`` estamos en posición de comenzar a realizar los siguientes ejercicios con Hadoop. 
 
 
 ### 1. Calcula el valor mínimo de la variable (columna) 5
@@ -549,5 +549,25 @@ La salida sería:
 	Minimo de la variable 0:	0.094
 	Maximo de la variable 0:	0.768
 
+
+### Repite el proceso sobre un conjunto de mayor volumen (Ej: /user/ isaac/datasets/higgs...” ¿Hay grandes diferencias de tiempo?
+
+
+En este punto hemos usado de nuevo el código del cálculo del mínimo. Primero hemos ejecutado sobre nuestro problema ECBDL14 y tras ello, sobre el dataset ``higgsImb10-5-fold/higgsImb10.data`` el cual es de menor tamaño. Los resultados son estos:
+
+**ECBDL14**
+
+Tiempo en las tareas relacionadas con el proceso mapper 16s, mientras que con el proceso mapper 40s. En total el tiempo ha sido de casi un minuto, pero debemos remarcar que hemos notado el servidor algo saturado por lo que los experimentos pueden haberse visto afectados por ello. 
+
+**HIGGS**
+
+En este caso, el tiempo en las tareas relacionadas con el proceso mapper ha sido de 11 segundos mientras que el proceso reduce ha ocupado 36 segundos. 
+
+**Conclusiones**
+
+Si analizamos los resultados el proceso sobre el dataset HIGSS ha tardado 9 segundos menos que el proceso sobre el dataset ECBDL14, teniendo en cuenta que este último es bastante mayor, la mejora de tiempo no es significativa. 
+
+
+### Acelera el proceso de cómputo descargando al Reducer de parte de la tarea.
 
 
