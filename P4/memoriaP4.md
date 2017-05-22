@@ -570,9 +570,9 @@ Si analizamos los resultados el proceso sobre el dataset HIGSS ha tardado 9 segu
 
 ### Acelera el proceso de cómputo descargando al Reducer de parte de la tarea.
 
-Para esta parte nos basaremos en el código de ejemplo visto en el manual de Hadoop. Concretamente en el código de ejemplo del problema de las palabras vacias. En este punto, deberemos modificar de nuevo todas las funciones implicadas en el proceso Mapreduce sobre hadoop. El proceso que hemos seguido para descargar al reducer de parte de la tarea, es que el minimo, sera finalmente obtenido por la funcion ``cleanup``del mapper, de una manera tan simple como ordenando un ArrayList y mostrando el primer elemento. 
+Para esta parte nos basaremos en el código de ejemplo visto en el manual de Hadoop. Concretamente en el código de ejemplo del problema de las palabras vacías. En este punto, deberemos modificar de nuevo todas las funciones implicadas en el proceso Mapreduce sobre hadoop. El proceso que hemos seguido para descargar al reducer de parte de la tarea, es que el mínimo, sera finalmente obtenido por la función ``cleanup``del mapper, de una manera tan simple como ordenando un ArrayList y mostrando el primer elemento. 
 
-Debemos llevar cuidado con la definiciond de la clase y los import ya que estos ya no seran MapReduceBase.
+Debemos llevar cuidado con la definición de la clase y los import ya que estos ya no serán MapReduceBase.
 
 El código de **main** sería el siguiente:
 
@@ -637,6 +637,9 @@ Y por último el código del proceso **reduce**:
 		}
 	}
 
+Con lo que veríamos la siguiente salida:
+
+	1 -11.0
 
 ## Conclusiones
 
