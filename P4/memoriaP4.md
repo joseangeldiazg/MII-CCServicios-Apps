@@ -488,7 +488,7 @@ La salida que ofrece es la que podemos ver a continuación:
 
 En el tutorial de Hadoop se propone la realización de algunos otros objetivos, en este primer punto realizaremos tres de ellos al mismo tiempo:
 
-Unir todos los estadísticos en un mismo código, hacerlo sobre todas las variables y etiquetar los experimentos. La función Mapper es la misma que hemos usado en las anteriores ocasiones que queriamos calcular algo sobre todas las muestras. Por otro lado, la función Reduce si que tiene cambios:
+Unir todos los estadísticos en un mismo código, hacerlo sobre todas las variables y etiquetar los experimentos. La función Mapper es la misma que hemos usado en las anteriores ocasiones que queríamos calcular algo sobre todas las muestras. Por otro lado, la función Reduce si que tiene cambios:
 
 	public class StatAllReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 
@@ -570,4 +570,74 @@ Si analizamos los resultados el proceso sobre el dataset HIGSS ha tardado 9 segu
 
 ### Acelera el proceso de cómputo descargando al Reducer de parte de la tarea.
 
+Para esta parte nos basaremos en el código de ejemplo visto en el manual de Hadoop. Concretamente en el código de ejemplo del problema de las palabras vacias. En este punto, deberemos modificar de nuevo todas las funciones implicadas en el proceso Mapreduce sobre hadoop. El proceso que hemos seguido para descargar al reducer de parte de la tarea, es que el minimo, sera finalmente obtenido por la funcion ``cleanup``del mapper, de una manera tan simple como ordenando un ArrayList y mostrando el primer elemento. 
 
+Debemos llevar cuidado con la definiciond de la clase y los import ya que estos ya no seran MapReduceBase.
+
+El código de **main** sería el siguiente:
+
+
+	public class MinFaster extends Configured implements Tool {
+	
+		public static void main(String args[]) throws Exception
+		{
+	      int res = ToolRunner.run(new Configuration(), new MinFaster(), args);
+	      System.exit(res);
+	  }
+	
+		public int run(String[] args) throws IOException,  InterruptedException, ClassNotFoundException {
+			if (args.length != 2) {
+				System.err.println("Usage: MinFaster <input path> <output path>");
+				System.exit(-1);
+			}
+			Configuration conf = new Configuration(1);
+			Job job = Job.getInstance(conf, "MinFaster");
+			job.setJarByClass(MinFaster.class);
+			job.setMapperClass(MinFasterMapper.class);
+			job.setReducerClass(MinFasterReducer.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(DoubleWritable.class);
+			FileInputFormat.addInputPath(job, new Path(args[0]));
+			FileOutputFormat.setOutputPath(job, new Path(args[1]));
+			return job.waitForCompletion(true) ? 0 : 1;
+		}
+	}
+
+El código del **mapper** sería:
+
+	public class MinFasterMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+	        private static final int MISSING = 9999;
+	        public static int col=5;
+	        public ArrayList<Double> elementos = new ArayList<>();
+	
+			    public void map(LongWritable key, Text value, Context context) throws IOException {
+	                String line = value.toString();
+	                String[] parts = line.split(",");
+	                elementos.add(Double.parseDouble(parts[col]));
+	        }
+	        @Override
+	        protected void cleanup(Context context) throws IOException, InterruptedException {
+	                Collections.sort(elementos);
+	                context.write(new Text("Min"), new DoubleWritable(elementos.get(0)));
+	        }
+	}
+
+Y por último el código del proceso **reduce**:
+
+	public class MinFasterReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+
+		public void reduce(Text key, Iterator<DoubleWritable> values, Context context) throws IOException, InterruptedException {
+
+			Double minValue = Double.MAX_VALUE;
+			while (values.hasNext())
+			{
+					minValue =values.next().get();
+			}
+			context.write(key, new DoubleWritable(minValue));
+		}
+	}
+
+
+## Conclusiones
+
+Hadoop nos ofrece de manera simple y sencilla una forma de computo distribuida muy avanzada y potente. Solo tenemos que fijarnos en el dataset **ECBDL14** usado que pese a corresponder con el 10% del dataset real, es bastante grande y los cálculos sobre el no llevan mucho tiempo. Si estos cálculos los hiciéramos con las técnicas tradicionales de programación estas nos tomarían mucho tiempo por lo que harían del tiempo de computo un factor privativo.
