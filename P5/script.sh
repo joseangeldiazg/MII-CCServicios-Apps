@@ -22,10 +22,10 @@ DATAPATH="/user/mcc76139799/"
 DATASET="BNG_heart"
 
 
-#hadoop jar /tmp/mahout-distribution-sige.jar \
-# org.apache.mahout.classifier.df.tools.Describe \
-# -p $DATAPATH/$DATASET/$DATASET-5-1tra.dat \
-#-f $DATASET.info -d N C 3 N 2 C N C N 3 C L;
+hadoop jar /tmp/mahout-distribution-sige.jar \
+ org.apache.mahout.classifier.df.tools.Describe \
+ -p $DATAPATH/$DATASET/$DATASET-5-1tra.dat \
+-f $DATASET.info -d N C 3 N 2 C N C N 3 C L;
 
 
 hadoop jar /tmp/mahout-distribution-sige.jar org.apache.mahout.classifier.df.mapreduce.BuildForest \
