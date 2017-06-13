@@ -39,13 +39,14 @@ if [ $control = $des ];
  		-f $DATASET.info -d N C 3 N 2 C N C N 3 C L;
 fi
 
-hadoop jar /tmp/mahout-distribution-sige.jar org.apache.mahout.classifier.df.mapreduce.BuildForest \
+hadoop jar /tmp/mahout-distribution-sige.jar
+ org.apache.mahout.classifier.df.mapreduce.BuildForest \
  -Dmapreduce.input.fileinputformat.split.minsize=$BYTES_BY_PARTITION \
  -Dmapreduce.input.fileinputformat.split.maxsize=$MAX_BYTES_BY_PARTITION \
- -o $salida \
--d $DATAPATH/$DATASET/$DATASET-5-1tra.dat \
+ -o output_RF_${TREES}_${MAPS} \
+ -d $DATAPATH/$DATASET/$DATASET-5-1tra.dat \
  -ds $DATASET.info \
--sl 13 -p -t $TREES;
+ -sl 13 -p -t $TREES;
 
 hadoop jar /tmp/mahout-distribution-sige.jar org.apache.mahout.classifier.df.mapreduce.TestForest \
  -i $DATAPATH/$DATASET/$DATASET-5-1tst.dat \
