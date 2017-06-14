@@ -101,5 +101,20 @@ Una vez ejecutado, en la salida por terminal podremos encontrar los valores requ
 	
 ## Análisis de resultados
 	
+En este punto analizamos algunos puntos interesantes y a tener en cuenta del proceso.
+
+### Tiempo
+
+![Arquitectura app web](./images/tiempo.png "Arquitectura app web")
+
+
+### Evaluación	
+
+![Arquitectura app web](./images/eval.png "Arquitectura app web")
+
+### Características
+
+![Arquitectura app web](./images/car.png "Arquitectura app web")
+
 	
 ## Conlusiones		
