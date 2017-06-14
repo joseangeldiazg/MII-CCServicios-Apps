@@ -51,5 +51,5 @@ hadoop jar /tmp/mahout-distribution-sige.jar
 hadoop jar /tmp/mahout-distribution-sige.jar org.apache.mahout.classifier.df.mapreduce.TestForest \
  -i $DATAPATH/$DATASET/$DATASET-5-1tst.dat \
 -ds $DATASET.info \
--m $salida \
+-m output_RF_${TREES}_${MAPS} \
 -a -mr -o $salida2;
