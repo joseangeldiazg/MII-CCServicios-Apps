@@ -105,16 +105,49 @@ En este punto analizamos algunos puntos interesantes y a tener en cuenta del pro
 
 ### Tiempo
 
-![Arquitectura app web](./images/tiempo.png "Arquitectura app web")
+Uno de los factores más interesantes de analizar es la evolución del tiempo de ejecución en las distintas combinaciones de parámetros de entrada. En la siguiente tabla tenemos estas combinaciones: 
+
+| Maps \ Arboles | 10       | 100      | 1000      |
+|:--------------:|----------|----------|-----------|
+| 64             | 2s 910ms | 6s 490ms | 55s 210ms |
+| 128            | 2s 760ms | 5s 820ms | 44s 70ms  |
+| 256            | 2s 800ms | 5s 140ms | 34s 30ms  |
+
+
+Si obtenemos las gráficas de la anterior tabla, podemos constatar como el aumentar el número de procesos maps el tiempo comienza a reducirse drásticamente. Aquí podemos ver la potencia de Hadoop haciendo que computación distribuida que podría necesitar grandes tiempos aunque solo sean de gestión de hebras y procesos se comporte de manera muy eficiente. 
+
+![Arquitectura app web](./images/tiempo.png "Gráfico con el tiempo")
 
 
 ### Evaluación	
 
-![Arquitectura app web](./images/eval.png "Arquitectura app web")
+He querido obtener los valores de evaluación y compararlos unos con otro para ver como afecta el número de árboles a la correcta clasificación. Este factor, es un factor muy relevante en ciencia de datos cuando se trabaja con el algoritmo *Random Forest*. El resumen del valor de *acuraccy* en test podemos verlo en la siguiente tabla.
+
+| Maps \ Arboles | 10         | 100      | 1000     |
+|:--------------:|------------|----------|----------|
+| 64             | 0,87876    | 0,894145 | 0,8966   |
+| 128            | 0,87000921 | 0,88203  | 0,894445 |
+| 256            | 0,8677     | 0,87778  | 0,89208  |
+
+Pasando estos valores a el gráfico, podemos constatar como a más árboles el valor de accuracy parece ir aumentando. La literatura, sitúa este valor en valores superiores de 100, y hasta 4048 en algunos experimentos, obteniendo en estos puntos los mejores valores de. Si comparamos nuestros resultados vemos como a raíz de 100 árboles comenzamos a obtener resultados similares a los 1000, pero cabria la posibilidad de probar con mas para comprobar hasta donde la tendencia se mantiene.  
+
+![Arquitectura app web](./images/car.png "Gráfico con el valor de Acc")
 
 ### Características
 
-![Arquitectura app web](./images/car.png "Arquitectura app web")
+Por último se han analizado las características del proceso. En la siguiente tabla tenemos el resumen de nodos por map y trees. 
+
+| Maps \ Arboles | 10    | 100    | 1000    |
+|:--------------:|-------|--------|---------|
+| 64             | 12755 | 128343 | 1285247 |
+| 128            | 6983  | 69456  | 680308  |
+| 256            | 3583  | 36996  | 362562  |
+
+
+
+Pasando la tabla a gráfico, es interesante ver como los nodos se reducen en comparación al número de maps, llegando a haber diferencias muy elevadas y una tendencia claramente mucho más inclinada en valores bajos de maps frente a los altos.  
+
+![Arquitectura app web](./images/eval.png "Gráfico con el número de nodos")
 
 	
 ## Conlusiones		
