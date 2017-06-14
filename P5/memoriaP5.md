@@ -21,7 +21,7 @@ Los objetivos serán:
 
 ## Ejecución 
 
-Para la ejecución las distintas baterias de pruebas se ha realizado el [siguiente script](https://github.com/joseangeldiazg/MII-CCServicios-Apps/blob/master/P5/script.sh) que nos pide por entrada estándar los parámetros necesarios.
+Para poner en marcha las baterías de pruebas, se ha creado un script bash que obtiene los parámetros por la entrada estándar y nos muestra la salida al finalizar para poder ir viendo como se comporta el modelo. Antes de poder ejecutarlo, hay que tener en cuenta que debemos traernos el dataset a nuestro espacio de usuario en el HDFS ya que de otro modo este nos dará error.  El [siguiente script](https://github.com/joseangeldiazg/MII-CCServicios-Apps/blob/master/P5/script.sh) usado es el siguiente:
 
 	#! /bin/bash
 	
@@ -97,6 +97,9 @@ Una vez ejecutado, en la salida por terminal podremos encontrar los valores requ
 | 256  | 10      | 3583           | 358               | 14                 | 2800ms     | 0,8689     | 0,867975    | 0,8677     | 0,86554533 |
 | 256  | 100     | 36996          | 369               | 14                 | 5140ms     | 0,87778    | 0.87702736  | 0,87778    | 0,87602736 |
 | 256  | 1000    | 362562         | 362               | 13                 | 34030ms    | 0,89208    | 0.88797009  | 0,89208    | 0,88997009 |
+	
+	
+## Análisis de resultados
 	
 	
 ## Conlusiones		
