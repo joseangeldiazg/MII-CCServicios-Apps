@@ -151,3 +151,5 @@ Pasando la tabla a gráfico, es interesante ver como los nodos se reducen en com
 
 	
 ## Conlusiones		
+
+Con esta última práctica de la asignatura hemos dejado constatado lo que comprobamos en la anterior donde vimos la potencia de Hadoop para manejar grandes conjuntos de datos. Ahora, en conjunción con Mahout, la potencia de este se exprime al máximo para el procesado de grandes conjuntos de datos y datasets que de otro modo serían imposibles de manejar. Queda clara por tanto la gran relevancia de estas tecnologías en el mundo actual donde los datos y su conocimiento están cambiando la práctica totalidad de las actividades económicas o sociales. 
